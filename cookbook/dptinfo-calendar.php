@@ -17,37 +17,21 @@
 	$DptinfoCalendarEvents = array();
 	$DptinfoCalendarDisplayCounter = 0;
 
-	$DptinfoCalendarUseNew = true;
-
 	// Binds the various js scripts to be loaded to the headers, only if at least one calendar is displayed:
 	function DptinfoCalendarHeaders() {
-		global $HTMLHeaderFmt, $DptinfoCalendarUseNew;
+		global $HTMLHeaderFmt;
 		static $calls = 0; // Avoids the headers being set multiple times
 
 		if ($calls > 0) { } else {
-			if (! $DptinfoCalendarUseNew) {
-	$HTMLHeaderFmt['DptinfoCalendarHDS']="
-<link href='/pub/css/dptcal-temp/fullcalendar.css' rel='stylesheet'/>
-<link href='/pub/css/dptcal-temp/fullcalendar.print.css' rel='stylesheet' media='print'/>
-<link href='/pub/css/dptcal-temp/jquery.qtip.min.css' rel='stylesheet'/>
-<link href='/pub/css/dptcal-temp/dptCalendar.css' rel='stylesheet'/>
-<script src='/pub/js/dptcal-temp/moment.min.js'></script>
-<script src='/pub/js/dptcal-temp/jquery.min.js'></script>
-<script src='/pub/js/dptcal-temp/fullcalendar.min.js'></script>
-<script src='/pub/js/dptcal-temp/fr.js'></script>
-<script src='/pub/js/dptcal-temp/jquery.qtip.min.js'></script>
-<script src='/pub/js/dptcal-temp/dptCalendar.js'></script>
-";			
-			} else {
-				$JSPath="/pub/js/dptcal";
-				$CSSPath="/pub/css/dptcal";
-				$headers = "<link href='$CSSPath/fullcalendar.css' rel='stylesheet' />";
-				$headers.= "<script src='$JSPath/jquery.min.js'></script>";
-				$headers.= "<script src='$JSPath/moment.min.js'></script>";
-				$headers.= "<script src='$JSPath/fullcalendar.min.js'></script>";
-				$headers.= "<script src='$JSPath/dptcal.js'></script>";
-				$HTMLHeaderFmt['DptinfoCalendarHDS'] = $headers;
-			}
+			$http_path=dirname($_SERVER["PHP_SELF"]);
+			$JSPath=$http_path."pub/dptinfo-calendar/js";
+			$CSSPath=$http_path."pub/dptinfo-calendar/css";
+			$headers = "<link href='$CSSPath/fullcalendar.css' rel='stylesheet' />";
+			$headers.= "<script src='$JSPath/jquery.min.js'></script>";
+			$headers.= "<script src='$JSPath/moment.min.js'></script>";
+			$headers.= "<script src='$JSPath/fullcalendar.min.js'></script>";
+			$headers.= "<script src='$JSPath/dptcal.js'></script>";
+			$HTMLHeaderFmt['DptinfoCalendarHDS'] = $headers;
 		} $calls++;
 	}
 	// ToDo : minimise the number of javascript and css scripts used
