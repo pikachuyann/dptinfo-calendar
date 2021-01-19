@@ -48,7 +48,7 @@
 	}
 
 	function DptInfoCalendarSpecialChars($string) {
-		$newstring = htmlspecialchars($string);
+		$newstring = PHSC($string); // PHSC is an equivalent to htmlspecialchars that is defined in PmWiki to deal with the different possible encodings.
 		$ns2 = preg_replace("/'/", "&quot;", $newstring);
 		$ns3 = preg_replace('/"/', "&dquo;", $ns2);
 		return $ns3;
