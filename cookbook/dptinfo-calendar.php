@@ -79,8 +79,6 @@
 				$displaykey=DptInfoCalendarSpecialChars($key);
 				echo "<font color='red'>[<strong>DptInfoEvent</strong> - Unknown key $displaykey]</font>";
 			}
-			if ($key=="name") { $eventData["name"]=htmlspecialchars($item); }
-			if ($key=="hour") { $eventData["hour"]=htmlspecialchars($item); }
 		}
 
 		$DptinfoCalendarEvents[] = $eventData;
