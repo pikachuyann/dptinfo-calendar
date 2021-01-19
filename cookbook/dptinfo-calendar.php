@@ -24,6 +24,7 @@
 
 		if ($calls > 0) { } else {
 			$http_path=dirname($_SERVER["PHP_SELF"]);
+			if ($http_path != "/") { $http_path=$http_path."/"; }
 			$JSPath=$http_path."pub/dptinfo-calendar/js";
 			$CSSPath=$http_path."pub/dptinfo-calendar/css";
 			$headers = "<link href='$CSSPath/fullcalendar.css' rel='stylesheet' />";
