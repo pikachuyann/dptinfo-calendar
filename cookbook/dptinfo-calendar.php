@@ -27,13 +27,28 @@
 			if ($http_path != "/") { $http_path=$http_path."/"; }
 			$JSPath=$http_path."pub/dptinfo-calendar/js";
 			$CSSPath=$http_path."pub/dptinfo-calendar/css";
-			$headers = "<link href='$CSSPath/fullcalendar.css' rel='stylesheet' />";
-			$headers.= "<script src='$JSPath/jquery.min.js'></script>";
-			$headers.= "<script src='$JSPath/moment.min.js'></script>";
-			$headers.= "<script src='$JSPath/fullcalendar.min.js'></script>";
-			$headers.= "<script src='$JSPath/dptcal.js'></script>";
+			$headers = DptinfoCalendarAddHeader("css", "fullcalendar.css");
+			$headers.= DptinfoCalendarAddHeader("js", "jquery.min.js");
+			$headers.= DptinfoCalendarAddHeader("js", "moment.min.js");
+			$headers.= DptinfoCalendarAddHeader("js", "fullcalendar.min.js");
+			$headers.= DptinfoCalendarAddHeader("js", "dptcal.js");
 			$HTMLHeaderFmt['DptinfoCalendarHDS'] = $headers;
 		} $calls++;
+	}
+
+	function DptinfoCalendarAddHeader($type, $file) {
+		$http_path=dirname($_SERVER["PHP_SELF"]);
+		if ($http_path != "/") { $http_path=$http_path."/"; }
+		$pmwiki_path=dirname(__FILE__); // That is the path to the current recipe.
+		$pmwiki_path=dirname($pmwiki_path); // This should be the path to pmwiki main directory
+		if ($pmwiki_path != "/") { $pmwiki_path=$pmwiki_path."/"; }
+		if ($type == "js") { $path="pub/dptinfo-calendar/js/"; }
+		else if ($type == "css") { $path="pub/dptinfo-calendar/css/"; }
+		else { return ""; } // Unknown file type, do not try further things.
+		$stat = stat($pmwiki_path.$path.$file);
+		$addstamp = "?m=".$stat["mtime"];
+		if ($type == "js") { return "<script src='$http_path$path$file$addstamp'></script>"; }
+		else if ($type == "css") { return "<link href='$http_path$path$file$addstamp' rel='stylesheet' />"; }
 	}
 	// ToDo : minimise the number of javascript and css scripts used
 
