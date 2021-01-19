@@ -107,12 +107,16 @@
 
 		DptinfoCalendarHeaders();
 
+		$isFirstEvent = true;
+
 		$script_dical="<script>\n";
 		$script_dical.="function dptinfoCalendar$DptinfoCalendarDisplayCounter() {\n";
 		$script_dical.="return {\n";
 		// Create the list of Events
 		$script_dical.="events : [\n";
 		foreach ($DptinfoCalendarEvents as $key => $event) {
+			if ($isFirstEvent) { $isFirstEvent = false; }
+			else { $script_dical.=","; }
 			$script_dical.="{";
 			if (isset($event["date"])) { $script_dical.=" date: '$event[date]', "; }
 			if (isset($event["start"])) { $script_dical.=" start: '$event[start]', "; }
@@ -121,9 +125,9 @@
 			if (isset($event['speaker'])) { $script_dical.=" speaker: '$event[speaker]', "; }
 			if (isset($event["name"])) { $script_dical.=" name: '$event[name]', "; }
 			$script_dical.=" debug: 'debug'";
-			$script_dical.="},\n";
+			$script_dical.="}\n";
 		}
-		$script_dical.="], \n";
+		$script_dical.="]\n";
 		// -- List of events ---
 		$script_dical.="};\n"; // Ends return
 		$script_dical.="};\n"; // Ends the function
