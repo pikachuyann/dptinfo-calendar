@@ -1,0 +1,153 @@
+<?php
+	if (!defined('PmWiki')) exit();
+
+	$DptinfoCalendarDebugMode = false;
+
+	/***
+	 * GOAL : Be able to use wiki markups to fill and display a calendar through a modified version of FullCalendar that is used in the Computer Science department of ENS Paris-Saclay, France
+	 ***/
+
+	// THIS IS A WORK IN PROGRESS - 2021-01-12
+
+	$RecipeInfo['DptinfoCalendar']['version'] = 'alpha';
+
+	/** To easily distinguish with other recipes, the global variables contain the (wikified?) name of the recipe, which is long; maybe this is not a good idea. **/
+
+	// Event list:
+	$DptinfoCalendarEvents = array();
+	$DptinfoCalendarDisplayCounter = 0;
+
+	$DptinfoCalendarUseNew = true;
+
+	// Binds the various js scripts to be loaded to the headers, only if at least one calendar is displayed:
+	function DptinfoCalendarHeaders() {
+		global $HTMLHeaderFmt, $DptinfoCalendarUseNew;
+		static $calls = 0; // Avoids the headers being set multiple times
+
+		if ($calls > 0) { } else {
+			if (! $DptinfoCalendarUseNew) {
+	$HTMLHeaderFmt['DptinfoCalendarHDS']="
+<link href='/pub/css/dptcal-temp/fullcalendar.css' rel='stylesheet'/>
+<link href='/pub/css/dptcal-temp/fullcalendar.print.css' rel='stylesheet' media='print'/>
+<link href='/pub/css/dptcal-temp/jquery.qtip.min.css' rel='stylesheet'/>
+<link href='/pub/css/dptcal-temp/dptCalendar.css' rel='stylesheet'/>
+<script src='/pub/js/dptcal-temp/moment.min.js'></script>
+<script src='/pub/js/dptcal-temp/jquery.min.js'></script>
+<script src='/pub/js/dptcal-temp/fullcalendar.min.js'></script>
+<script src='/pub/js/dptcal-temp/fr.js'></script>
+<script src='/pub/js/dptcal-temp/jquery.qtip.min.js'></script>
+<script src='/pub/js/dptcal-temp/dptCalendar.js'></script>
+";			
+			} else {
+				$JSPath="/pub/js/dptcal";
+				$CSSPath="/pub/css/dptcal";
+				$headers = "<link href='$CSSPath/fullcalendar.css' rel='stylesheet' />";
+				$headers.= "<script src='$JSPath/jquery.min.js'></script>";
+				$headers.= "<script src='$JSPath/moment.min.js'></script>";
+				$headers.= "<script src='$JSPath/fullcalendar.min.js'></script>";
+				$headers.= "<script src='$JSPath/dptcal.js'></script>";
+				$HTMLHeaderFmt['DptinfoCalendarHDS'] = $headers;
+			}
+		} $calls++;
+	}
+	// ToDo : minimise the number of javascript and css scripts used
+
+	// Binds the various markups
+	Markup('DptinfoCalendar', 'directives', '/\\(:dptcal(.*):\\)/', "DptinfoCalendarDisplayHook");
+	SDVA($MarkupExpr, array('dptevent' => 'DptinfoCalendarEvent($pagename,$argp)'));
+
+	// Sort of a "hook" to make another PmWiki function actually parse the arguments
+	function DptinfoCalendarDisplayHook($arguments) {
+		global $pagename;
+		return DptinfoCalendarDisplay($pagename, PSS($arguments[1]));
+	}
+
+	function DptInfoCalendarSpecialChars($string) {
+		$newstring = htmlspecialchars($string);
+		$ns2 = preg_replace("/'/", "&quot;", $newstring);
+		$ns3 = preg_replace('/"/', "&dquo;", $ns2);
+		return $ns3;
+	}
+
+	function DptinfoCalendarEvent($pagename, $args) {
+		global $DptinfoCalendarEvents;
+
+		// Parse the arguments, rename all keys to lowercase so they're more easily parsed.
+		$a = $args;
+		$a = array_change_key_case($a,CASE_LOWER);
+
+		$eventData = array();
+
+		foreach ($a as $key => $item) {
+			switch ($key) {
+			case "#": // Contains an array with even items being keys and (following) odd items being something that is probably their associated item.
+				break;
+			case "name":
+			case "start":
+			case "end":
+			case "room":
+			case "speaker":
+			case "date":
+				$eventData[$key]=DptInfoCalendarSpecialChars($item);
+				break;
+			default:
+				$displaykey=DptInfoCalendarSpecialChars($key);
+				echo "<font color='red'>[<strong>DptInfoEvent</strong> - Unknown key $displaykey]</font>";
+			}
+			if ($key=="name") { $eventData["name"]=htmlspecialchars($item); }
+			if ($key=="hour") { $eventData["hour"]=htmlspecialchars($item); }
+		}
+
+		$DptinfoCalendarEvents[] = $eventData;
+	}
+
+	function DptinfoCalendarDisplay($pagename, $args) {
+		global $DptinfoCalendarEvents, $DptinfoCalendarDisplayCounter;
+		global $DptinfoCalendarUseNew;
+		global $DptinfoCalendarDebugMode;
+		global $HTMLHeaderFmt;
+
+		DptinfoCalendarHeaders();
+
+		$script_dical="<script>\n";
+		$script_dical.="function dptinfoCalendar$DptinfoCalendarDisplayCounter() {\n";
+		$script_dical.="return {\n";
+		// Create the list of Events
+		$script_dical.="events : [\n";
+		foreach ($DptinfoCalendarEvents as $key => $event) {
+			$script_dical.="{";
+			if (isset($event["date"])) { $script_dical.=" date: '$event[date]', "; }
+			if (isset($event["start"])) { $script_dical.=" start: '$event[start]', "; }
+			if (isset($event["end"])) { $script_dical.=" end: '$event[end]', "; }
+			if (isset($event["room"])) { $script_dical.=" room: '$event[room]', "; }
+			if (isset($event['speaker'])) { $script_dical.=" speaker: '$event[speaker]', "; }
+			if (isset($event["name"])) { $script_dical.=" name: '$event[name]', "; }
+			$script_dical.=" debug: 'debug'";
+			$script_dical.="},\n";
+		}
+		$script_dical.="], \n";
+		// -- List of events ---
+		$script_dical.="};\n"; // Ends return
+		$script_dical.="};\n"; // Ends the function
+		$script_dical.="</script>";
+
+		$displayed_html="<div id='DptinfoCalendar$DptinfoCalendarDisplayCounter'> <div id='DptinfoCalendarInner$DptinfoCalendarDisplayCounter'> </div> </div>";
+
+		// Modify the headers accordingly
+		if (! $DptinfoCalendarUseNew) {
+			$hdrscript="<script> $(document).ready( function(){ genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter); }); </script>";
+		} else {
+			$hdrscript="<script> DptinfoCalendarReady( function(){ genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter); } ); </script>";
+		}
+		$HTMLHeaderFmt["DptinfoCalendarDISP$DptinfoCalendarDisplayCounter"]=$hdrscript;
+
+		// Increase the counter for the next calendar to be displayed, if necessary
+		$DptinfoCalendarDisplayCounter++;
+
+		if ($DptinfoCalendarDebugMode == true) {
+			return htmlspecialchars($hdrscript).htmlspecialchars($script_dical).htmlspecialchars($displayed_html).$script_dical.$displayed_html;
+		} else {
+			return $script_dical.$displayed_html;
+		}
+	}
+?>
