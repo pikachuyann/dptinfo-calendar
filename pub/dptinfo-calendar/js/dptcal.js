@@ -106,7 +106,7 @@ function calendarEvent (data, cev)
 
 /**************************************************************************************************************************/
 
-function genCalendar(style,name,callback)
+function genCalendar(style,name,callback,addoptions)
 {
 	calEvents = [];
 	var options = dptinfoCalDefaultOptions;
@@ -139,4 +139,7 @@ function genCalendar(style,name,callback)
 
 	// Actually display the calendar:
 	$("#"+name).fullCalendar(options);
+
+	if (addoptions.hasOwnProperty('startDate'))
+		$("#"+name).fullCalendar('gotoDate', addoptions.startDate);
 }

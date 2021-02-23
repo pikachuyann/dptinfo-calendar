@@ -107,6 +107,9 @@
 
 		DptinfoCalendarHeaders();
 
+		$a = ParseArgs($args);
+		$a = array_change_key_case($a,CASE_LOWER);
+
 		$isFirstEvent = true;
 
 		$script_dical="<script>\n";
@@ -136,10 +139,19 @@
 		$displayed_html="<div id='DptinfoCalendar$DptinfoCalendarDisplayCounter'> <div id='DptinfoCalendarInner$DptinfoCalendarDisplayCounter'> </div> </div>";
 
 		// Modify the headers accordingly
+		$calvirg="";
+		$calCall = "function(){ "; //DptinfoCalendarOptions$DptinfoCalendarDisplayCounter = ";
+		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, ";
+		$calCall.= "{"; // options start
+		if (isset($a["startdate"])) { $calCall.="$callvirg startDate:\"".DptInfoCalendarSpecialChars($a["startdate"])."\""; $callvirg=","; }
+		$calCall.= "} "; //options end
+		//		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, DptinfoCalendarOptions$DptinfoCalendarDisplayCounter); ";
+		$calCall.= "); ";
+		$calCall.= "} ";
 		if (! $DptinfoCalendarUseNew) {
-			$hdrscript="<script> $(document).ready( function(){ genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter); }); </script>";
+			$hdrscript="<script> $(document).ready( $calCall ); </script>";
 		} else {
-			$hdrscript="<script> DptinfoCalendarReady( function(){ genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter); } ); </script>";
+			$hdrscript="<script> DptinfoCalendarReady( $calCall ); </script>";
 		}
 		$HTMLHeaderFmt["DptinfoCalendarDISP$DptinfoCalendarDisplayCounter"]=$hdrscript;
 
