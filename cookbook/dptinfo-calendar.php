@@ -88,6 +88,7 @@
 			case "room":
 			case "speaker":
 			case "date":
+			case "color":
 				$eventData[$key]=DptInfoCalendarSpecialChars($item);
 				break;
 			default:
@@ -127,6 +128,7 @@
 			if (isset($event["room"])) { $script_dical.=" room: '$event[room]', "; }
 			if (isset($event['speaker'])) { $script_dical.=" speaker: '$event[speaker]', "; }
 			if (isset($event["name"])) { $script_dical.=" name: '$event[name]', "; }
+			if (isset($event["color"])) { $script_dical.=" color: '$event[color]', "; }
 			$script_dical.=" debug: 'debug'";
 			$script_dical.="}\n";
 		}
