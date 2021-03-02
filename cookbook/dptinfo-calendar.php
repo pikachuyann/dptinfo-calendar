@@ -159,11 +159,12 @@
 			case "teacher":
 			case "which":
 			case "name":
+			case "date":
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
 			default:
 				$displaykey=DptInfoCalendarSpecialChars($key);
-				echo "<font color='red'>[<strong>DptInfoLectureChange</strong> - Unknown key $displaykey]</font>";
+				echo "<font color='red'>[<strong>DptInfoLectureModify</strong> - Unknown key $displaykey]</font>";
 			}
 		}
 
