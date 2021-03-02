@@ -301,7 +301,12 @@
 		$script_dical.="};\n"; // Ends the function
 		$script_dical.="</script>";
 
-		$displayed_html="<div id='DptinfoCalendar$DptinfoCalendarDisplayCounter'> <div id='DptinfoCalendarInner$DptinfoCalendarDisplayCounter'> </div> ";
+		$displayed_html="<div id='DptinfoCalendar$DptinfoCalendarDisplayCounter'>";
+		if (isset($a["showschedule"])) {
+			$displayed_html.="<button id='DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter'>Shedule</button>";
+			$displayed_html.="<button id='DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter'>Agenda</button>";
+		}
+		$displayed_html.="<div id='DptinfoCalendarInner$DptinfoCalendarDisplayCounter'> </div> ";
 		if (isset($a["showschedule"])) {
 			$displayed_html.="<div id='DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter'> </div>";
 		}
@@ -309,7 +314,21 @@
 
 		// Modify the headers accordingly
 		$calvirg="";
+
+		$furtherJS="";
+		if (isset($a["showschedule"])) {
+			$furtherJS.="function dptinfoCalendarDisp$DptinfoCalendarDisplayCounter(tabname) {\n";
+			$furtherJS.="  console.log(tabname); \n";
+			$furtherJS.="  $('#'+tabname).css('display','block'); \n";
+			$furtherJS.="  $('#'+tabname).fullCalendar('render'); \n";
+			$furtherJS.="  $('#'+tabname).fullCalendar('rerenderEvents'); \n";
+			$furtherJS.="};";
+		}
+
 		$calCall = "function(){ "; //DptinfoCalendarOptions$DptinfoCalendarDisplayCounter = ";
+		if (isset($a["showschedule"])) {
+			$calCall.="$('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none');";
+		}
 		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, ";
 		$calCall.= "{"; // options start
 		if (isset($a["startdate"])) { $calCall.="$callvirg startDate:\"".DptInfoCalendarSpecialChars($a["startdate"])."\""; $callvirg=","; }
@@ -318,13 +337,16 @@
 		$calCall.= "); ";
 		if (isset($a["showschedule"])) {
 			$calCall.=" genCalendar('schedule', 'DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, {}); ";
+			$calCall.="$('#DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter'); } ); \n";
+			$calCall.="$('#DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarInner$DptinfoCalendarDisplayCounter'); } ); \n";
 		}
 
 		$calCall.= "} ";
+
 		if (! $DptinfoCalendarUseNew) {
-			$hdrscript="<script> $(document).ready( $calCall ); </script>";
+			$hdrscript="<script> $furtherJS $(document).ready( $calCall ); </script>";
 		} else {
-			$hdrscript="<script> DptinfoCalendarReady( $calCall ); </script>";
+			$hdrscript="<script> $furtherJS DptinfoCalendarReady( $calCall ); </script>";
 		}
 		$HTMLHeaderFmt["DptinfoCalendarDISP$DptinfoCalendarDisplayCounter"]=$hdrscript;
 
