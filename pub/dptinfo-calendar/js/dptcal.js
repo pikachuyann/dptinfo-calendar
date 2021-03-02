@@ -96,6 +96,35 @@ function advanceDate(d,n)
 	return date.toISOString().slice(0,10);
 }
 
+function isBlocked (dev)
+{
+	if (typeof dev.blocked == 'boolean') return dev.blocked;
+	if (dev.holidays || dev.holiday || dev.visit) return true;
+	return false;
+}
+
+function getDateDuration(e)
+{
+	var val = [];
+	if (e.date) { val[0] = val[1] = e.date; }
+	if (typeof e.deadline == 'string') { val[0] = val[1] = e.deadline; }
+	if (e.start) val[0] = e.start;
+	if (e.end) val[1] = e.end;
+	val[1] = advanceDate(val[1],1);
+	return val;
+}
+
+function dateBlocked(data, d)
+{
+	for (i in data.dates)
+	{
+		if (!isBlocked(data.dates[i])) continue;
+		var dur = getDateDuration(data.dates[i]);
+		if (d >= dur[0] && d <= dur[1]) return true;
+	}
+	return false;
+}
+
 /**************************************************************************************************************************/
 
 function calendarEvent (data, cev)
@@ -166,6 +195,7 @@ function calendarLecture (data, lecture) {
 	while (true) {
 		cDate = advanceDate(cDate,7);
 		if (cDate > lastCours) break;
+		if (dateBlocked(data,cDate)) continue;
 		events[cDate] = genLectureEvent(data,lecture,cDate,lecture.start,lecture.end);
 	}
 
