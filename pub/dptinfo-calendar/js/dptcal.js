@@ -89,6 +89,14 @@ function finalizeEvent (event)
 }
 
 /**************************************************************************************************************************/
+function advanceDate(d,n)
+{
+	var date = new Date(d+"T12:00");
+	date.setDate(date.getDate()+n);
+	return date.toISOString().slice(0,10);
+}
+
+/**************************************************************************************************************************/
 
 function calendarEvent (data, cev)
 {
@@ -102,6 +110,66 @@ function calendarEvent (data, cev)
 
 	applySettings(cev, event);
 	finalizeEvent(event);
+}
+
+/**************************************************************************************************************************/
+
+function getLectureDuration (d, start,end)
+{
+	var duration = [d,advanceDate(d,1)];
+	if (start) duration = [d+"T"+start, d+"T"+end];
+	return duration;
+}
+
+function setLectureProperties (lecture, event)
+{
+	setEventProperty(lecture, event, "type", "Lecture");
+	setEventProperty(lecture, event, "name", "");
+	setEventProperty(lecture, event, "teacher", "");
+	setEventProperty(lecture, event, "room", "");
+
+	event.title = event.ev_name + "\n" + event.ev_room + "\n" + getEventProperty(event, "teacher");
+}
+
+function genLectureEvent (data, lecture, d, start, end)
+{
+	var event = newEvent( getLectureDuration(d, start, end) );
+	setLectureProperties(lecture, event);
+	applySettings(lecture, event);
+
+	return event;	
+}
+
+function finalizeLecture(data,events)
+{
+	for (var cDate in events)
+	{
+		finalizeEvent(events[cDate]);
+	}
+}
+
+function calendarLecture (data, lecture) {
+	var firstCours = '';
+	var lastCours = '';
+	var events = [];
+
+	if (typeof data.start == 'string') firstCours = data.start;
+	if (typeof data.end == 'string') lastCours = data.end;
+	if (typeof lecture.first == 'string') firstCours = lecture.first;
+	if (typeof lecture.last == 'string') lastCours = lecture.last;
+
+	if (firstCours == '') return;
+	if (lastCours == '') return;
+
+	var cDate=advanceDate(firstCours,-7);
+
+	while (true) {
+		cDate = advanceDate(cDate,7);
+		if (cDate > lastCours) break;
+		events[cDate] = genLectureEvent(data,lecture,cDate,lecture.start,lecture.end);
+	}
+
+	finalizeLecture(data,events);
 }
 
 /**************************************************************************************************************************/
@@ -131,6 +199,7 @@ function genCalendar(style,name,callback,addoptions)
 	if (style == 'agenda')
 	{
 		jQuery.each(data.events,function() { calendarEvent(data,this); });
+		jQuery.each(data.lectures,function() { calendarLecture(data,this); });
 	}
 
 	jQuery.extend(options,data.options);
