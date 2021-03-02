@@ -112,7 +112,7 @@
 
 		$eventData = array();
 
-		foreach ($a as $key => $items) {
+		foreach ($a as $key => $item) {
 			switch ($key) {
 			case "#":
 				break;
@@ -141,7 +141,7 @@
 		$a = $args;
 		$a = array_change_key_case($a,CASE_LOWER);
 
-		foreach ($a as $key => $items) {
+		foreach ($a as $key => $item) {
 			switch ($key) {
 			case "#":
 				break;
@@ -157,7 +157,7 @@
 	}
 
 	function DptinfoCalendarDisplay($pagename, $args) {
-		global $DptinfoCalendarEvents, $DptinfoCalendarDisplayCounter;
+		global $DptinfoCalendarEvents, $DptinfoCalendarDisplayCounter, $DptinfoCalendarLectures, $DptinfoCalendarGlobalSettings;
 		global $DptinfoCalendarUseNew;
 		global $DptinfoCalendarDebugMode;
 		global $HTMLHeaderFmt;
@@ -172,6 +172,9 @@
 		$script_dical="<script>\n";
 		$script_dical.="function dptinfoCalendar$DptinfoCalendarDisplayCounter() {\n";
 		$script_dical.="return {\n";
+		// Settings
+		if (isset($DptinfoCalendarGlobalSettings["start"])) { $script_dical .= " start: '$DptinfoCalendarGlobalSettings[start]', "; }
+		if (isset($DptinfoCalendarGlobalSettings["end"])) { $script_dical .= " end: '$DptinfoCalendarGlobalSettings[end]', "; }
 		// Create the list of Events
 		$script_dical.="events : [\n";
 		foreach ($DptinfoCalendarEvents as $key => $event) {
@@ -190,6 +193,19 @@
 		}
 		$script_dical.="]\n";
 		// -- List of events ---
+		// Create the list of Lectures
+		$isFirstEvent = true;
+		$script_dical.=", lectures : [\n";
+		foreach ($DptinfoCalendarLectures as $key => $event) {
+			if ($isFirstEvent) { $isFirstEvent = false; }
+			else { $script_dical.=","; }
+			$script_dical.="{";
+			foreach ($event as $cle => $valeur) { $script_dical.=" $cle: '$valeur', "; }
+			$script_dical.=" debug: 'debug'";
+			$script_dical.="}\n";
+		}
+		$script_dical.="]";
+		// -- List of lectures --
 		$script_dical.="};\n"; // Ends return
 		$script_dical.="};\n"; // Ends the function
 		$script_dical.="</script>";
