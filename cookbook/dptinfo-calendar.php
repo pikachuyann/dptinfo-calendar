@@ -275,7 +275,22 @@
 			if ($isFirstEvent) { $isFirstEvent = false; }
 			else { $script_dical.=","; }
 			$script_dical.="{";
-			foreach ($event as $cle => $valeur) { $script_dical.=" $cle: '$valeur', "; }
+			foreach ($event as $cle => $valeur) {
+				if ($cle == "changes") {
+					$script_dical.=" changes: [";
+					foreach ($valeur as $notused => $chgdata) { 
+						$script_dical.=" {"; $isFV = true;
+						foreach ($chgdata as $chgkey => $chgvalue) { 
+							$isFV ? ($isFV = false) : ($script_dical.=",");
+							$script_dical.=" $chgkey: '$chgvalue' ";
+						}
+						$script_dical.=" }, ";
+					}
+					$script_dical.=" ], ";
+				} else {
+					$script_dical.=" $cle: '$valeur', ";
+				}
+			}
 			$script_dical.=" debug: 'debug'";
 			$script_dical.="}\n";
 		}
