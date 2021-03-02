@@ -16,6 +16,7 @@
 	// Event list:
 	$DptinfoCalendarEvents = array();
 	$DptinfoCalendarLectures = array();
+	$DptinfoCalendarGlobalSettings = array();
 	$DptinfoCalendarDisplayCounter = 0;
 
 	// Binds the various js scripts to be loaded to the headers, only if at least one calendar is displayed:
@@ -57,6 +58,7 @@
 	Markup('DptinfoCalendar', 'directives', '/\\(:dptcal(.*):\\)/', "DptinfoCalendarDisplayHook");
 	SDVA($MarkupExpr, array('dptevent' => 'DptinfoCalendarEvent($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptlecture' => 'DptinfoCalendarLecture($pagename,$argp)'));
+	SDVA($MarkupExpr, array('dptcalset' => 'DptinfoCalendarSetting($pagename,$argp)'));
 
 	// Sort of a "hook" to make another PmWiki function actually parse the arguments
 	function DptinfoCalendarDisplayHook($arguments) {
@@ -131,6 +133,27 @@
 		}
 
 		$DptinfoCalendarLectures[$eventData["id"]]=$eventData;
+	}
+
+	function DptinfoCalendarSetting($pagename, $args) {
+		global $DptinfoCalendarGlobalSettings;
+
+		$a = $args;
+		$a = array_change_key_case($a,CASE_LOWER);
+
+		foreach ($a as $key => $items) {
+			switch ($key) {
+			case "#":
+				break;
+			case "start":
+			case "end":
+				$DptinfoCalendarGlobalSettings[$key]=DptinfoCalendarSpecialChars($item);
+				break;
+			default:
+				$displaykey=DptInfoCalendarSpecialChars($key);
+				echo "<font color='red'>[<strong>DptInfoCalSet</strong> - Unknown key $displaykey]</font>";
+			}
+		}
 	}
 
 	function DptinfoCalendarDisplay($pagename, $args) {
