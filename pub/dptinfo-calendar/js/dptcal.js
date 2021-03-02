@@ -182,7 +182,7 @@ function applyModifications(events, modif) {
 	if (typeof event == 'undefined') { console.log("No event at date "+modif.which+" for "+modif.id+"."); return; }
 	var orig_start = event.start;
 	var orig_end = event.end;
-	var orig_room = event.room;
+	var orig_room = event.ev_room;
 
 	setEventProperty(modif, event, "date", modif.which);
 	setEventProperty(modif, event, "start", event.start.substr(11));
@@ -192,7 +192,8 @@ function applyModifications(events, modif) {
 
 	setLectureProperties(modif, event);
 
-	// ToDo: Maybe add here some things to display the change/modification as important
+	setEventProperty(modif, event, "important", event.end != orig_end || event.start != orig_start || event.ev_room != orig_room);
+	if (event.ev_important) event.borderColor = 'red';
 	
 	applySettings(modif, event);
 }
