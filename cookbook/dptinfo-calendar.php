@@ -59,6 +59,7 @@
 	Markup('DptinfoCalendar', 'directives', '/\\(:dptcal(.*):\\)/', "DptinfoCalendarDisplayHook");
 	SDVA($MarkupExpr, array('dptevent' => 'DptinfoCalendarEvent($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptlecture' => 'DptinfoCalendarLecture($pagename,$argp)'));
+	SDVA($MarkupExpr, array('dptlecturechange' => 'DptinfoCalendarLectureChange($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptcalset' => 'DptinfoCalendarSetting($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptdate' => 'DptinfoCalendarDates($pagename,$argp)'));
 
@@ -134,7 +135,38 @@
 			}
 		}
 
+		$eventData["changes"]=array();
 		$DptinfoCalendarLectures[$eventData["id"]]=$eventData;
+	}
+
+	function DptinfoCalendarLectureChange($pagename, $args) {
+		global $DptinfoCalendarLectures;
+
+		$a = $args;
+		$a = array_change_key_case($a,CASE_LOWER);
+
+		$eventData = array();
+
+		foreach ($a as $key => $item) {
+			switch ($key) {
+			case "#":
+				break;
+			case "id":
+			case "start":
+			case "end":
+			case "room":
+			case "teacher":
+			case "which":
+				$eventData[$key]=DptinfoCalendarSpecialChars($item);
+				break;
+			default:
+				$displaykey=DptInfoCalendarSpecialChars($key);
+				echo "<font color='red'>[<strong>DptInfoLectureChange</strong> - Unknown key $displaykey]</font>";
+			}
+		}
+
+		if (!isset($DptinfoCalendarLectures[$eventData["id"]])) { echo "<font color='red'>[<strong>DptinfoLectureChange</strong> - Unknown <em>event</em> $eventData[id] ]</font>"; }
+		else { $DptinfoCalendarLectures[$eventData["id"]]["changes"][]=$eventData; }
 	}
 
 	function DptinfoCalendarDates($pagename, $args) {
@@ -161,6 +193,8 @@
 				echo "<font color='red'>[<strong>DptInfoDate</strong> - Unknown key $displaykey]</font>";
 			}
 		}
+
+		$DptinfoCalendarDates[]=$eventData;
 	}
 
 	function DptinfoCalendarSetting($pagename, $args) {
@@ -186,6 +220,7 @@
 
 	function DptinfoCalendarDisplay($pagename, $args) {
 		global $DptinfoCalendarEvents, $DptinfoCalendarDisplayCounter, $DptinfoCalendarLectures, $DptinfoCalendarGlobalSettings;
+		global $DptinfoCalendarDates;
 		global $DptinfoCalendarUseNew;
 		global $DptinfoCalendarDebugMode;
 		global $HTMLHeaderFmt;
@@ -203,8 +238,20 @@
 		// Settings
 		if (isset($DptinfoCalendarGlobalSettings["start"])) { $script_dical .= " start: '$DptinfoCalendarGlobalSettings[start]', "; }
 		if (isset($DptinfoCalendarGlobalSettings["end"])) { $script_dical .= " end: '$DptinfoCalendarGlobalSettings[end]', "; }
+		// Create the list of Dates
+		$script_dical.="dates : [\n";
+		foreach ($DptinfoCalendarDates as $key => $event) {
+			if ($isFirstEvent) { $isFirstEvent = false; }
+			else { $script_dical.=","; }
+			$script_dical.="{";
+			foreach ($event as $cle => $valeur) { $script_dical.=" $cle: '$valeur', "; }
+			$script_dical.=" debug: 'debug'";
+			$script_dical.="}\n";
+		}
+		$script_dical.="]\n";
 		// Create the list of Events
-		$script_dical.="events : [\n";
+		$isFirstEvent = true;
+		$script_dical.=", events : [\n";
 		foreach ($DptinfoCalendarEvents as $key => $event) {
 			if ($isFirstEvent) { $isFirstEvent = false; }
 			else { $script_dical.=","; }
