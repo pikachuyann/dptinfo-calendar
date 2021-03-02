@@ -301,7 +301,11 @@
 		$script_dical.="};\n"; // Ends the function
 		$script_dical.="</script>";
 
-		$displayed_html="<div id='DptinfoCalendar$DptinfoCalendarDisplayCounter'> <div id='DptinfoCalendarInner$DptinfoCalendarDisplayCounter'> </div> </div>";
+		$displayed_html="<div id='DptinfoCalendar$DptinfoCalendarDisplayCounter'> <div id='DptinfoCalendarInner$DptinfoCalendarDisplayCounter'> </div> ";
+		if (isset($a["showschedule"])) {
+			$displayed_html.="<div id='DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter'> </div>";
+		}
+		$displayed_html.="</div>";
 
 		// Modify the headers accordingly
 		$calvirg="";
@@ -312,6 +316,10 @@
 		$calCall.= "} "; //options end
 		//		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, DptinfoCalendarOptions$DptinfoCalendarDisplayCounter); ";
 		$calCall.= "); ";
+		if (isset($a["showschedule"])) {
+			$calCall.=" genCalendar('schedule', 'DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, {}); ";
+		}
+
 		$calCall.= "} ";
 		if (! $DptinfoCalendarUseNew) {
 			$hdrscript="<script> $(document).ready( $calCall ); </script>";

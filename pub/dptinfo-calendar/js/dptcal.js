@@ -226,6 +226,16 @@ function calendarLecture (data, lecture) {
 	finalizeLecture(data,events);
 }
 
+function calendarLectureSummary (data, lecture) {
+	var cDate=advanceDate( data.start, new Date(lecture.first).getDay() - new Date(data.start).getDay() );
+
+	var event = newEvent(getLectureDuration(cDate, lecture.start, lecture.end));
+	setLectureProperties(lecture, event);
+	applySettings(lecture, event);
+
+	finalizeEvent(event);
+}
+
 /**************************************************************************************************************************/
 
 function genCalendar(style,name,callback,addoptions)
@@ -239,7 +249,7 @@ function genCalendar(style,name,callback,addoptions)
 		options.header = { left:"", right: "prev, today, next" };
 		options.columnFormat = "dddd D/M";
 	}
-	else if (style == "hebdo" || style == "semaine")
+	else if (style == "schedule" || style == "hebdo" || style == "semaine")
 	{
 		options.header = false;
 		options.allDaySlot = false;
@@ -254,6 +264,8 @@ function genCalendar(style,name,callback,addoptions)
 	{
 		jQuery.each(data.events,function() { calendarEvent(data,this); });
 		jQuery.each(data.lectures,function() { calendarLecture(data,this); });
+	} else if (style == 'schedule') {
+		jQuery.each(data.lectures,function() { calendarLectureSummary(data,this); });
 	}
 
 	jQuery.extend(options,data.options);
@@ -265,4 +277,7 @@ function genCalendar(style,name,callback,addoptions)
 
 	if (addoptions.hasOwnProperty('startDate'))
 		$("#"+name).fullCalendar('gotoDate', addoptions.startDate);
+
+	if (style == 'schedule')
+		$("#"+name).fullCalendar('gotoDate', data.start);
 }
