@@ -190,6 +190,8 @@ function applyChanges(events, change) {
 	var dur = getLectureDuration(event.ev_date, event.ev_start, event.ev_end);
 	event.start = dur[0]; event.end = dur[1];
 
+	setLectureProperties(change, event);
+
 	// ToDo: Maybe add here some things to display the change/modification as important
 	
 	applySettings(change, event);
