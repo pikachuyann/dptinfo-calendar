@@ -124,6 +124,7 @@
 			case "end":
 			case "room":
 			case "speaker":
+			case "teacher":
 			case "first":
 			case "id":
 			case "color":
