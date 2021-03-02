@@ -177,24 +177,24 @@ function finalizeLecture(data,events)
 	}
 }
 
-function applyChanges(events, change) {
-	var event = events[change.which];
-	if (typeof event == 'undefined') { console.log("No event at date "+change.which+" for "+change.id+"."); return; }
+function applyModifications(events, modif) {
+	var event = events[modif.which];
+	if (typeof event == 'undefined') { console.log("No event at date "+modif.which+" for "+modif.id+"."); return; }
 	var orig_start = event.start;
 	var orig_end = event.end;
 	var orig_room = event.room;
 
-	setEventProperty(change, event, "date", change.which);
-	setEventProperty(change, event, "start", event.start.substr(11));
-	setEventProperty(change, event, "end", event.end.substr(11));
+	setEventProperty(modif, event, "date", modif.which);
+	setEventProperty(modif, event, "start", event.start.substr(11));
+	setEventProperty(modif, event, "end", event.end.substr(11));
 	var dur = getLectureDuration(event.ev_date, event.ev_start, event.ev_end);
 	event.start = dur[0]; event.end = dur[1];
 
-	setLectureProperties(change, event);
+	setLectureProperties(modif, event);
 
 	// ToDo: Maybe add here some things to display the change/modification as important
 	
-	applySettings(change, event);
+	applySettings(modif, event);
 }
 
 function calendarLecture (data, lecture) {
@@ -219,8 +219,8 @@ function calendarLecture (data, lecture) {
 		events[cDate] = genLectureEvent(data,lecture,cDate,lecture.start,lecture.end);
 	}
 
-	if (typeof lecture.changes != 'undefined')
-		for (var c in lecture.changes) applyChanges(events,lecture.changes[c]);
+	if (typeof lecture.modifications != 'undefined')
+		for (var m in lecture.modifications) applyModifications(events,lecture.modifications[m]);
 
 	finalizeLecture(data,events);
 }

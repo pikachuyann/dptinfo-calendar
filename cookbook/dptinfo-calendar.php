@@ -59,7 +59,7 @@
 	Markup('DptinfoCalendar', 'directives', '/\\(:dptcal(.*):\\)/', "DptinfoCalendarDisplayHook");
 	SDVA($MarkupExpr, array('dptevent' => 'DptinfoCalendarEvent($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptlecture' => 'DptinfoCalendarLecture($pagename,$argp)'));
-	SDVA($MarkupExpr, array('dptlecturechange' => 'DptinfoCalendarLectureChange($pagename,$argp)'));
+	SDVA($MarkupExpr, array('dptlecturemodify' => 'DptinfoCalendarLectureModification($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptcalset' => 'DptinfoCalendarSetting($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptdate' => 'DptinfoCalendarDates($pagename,$argp)'));
 
@@ -135,11 +135,11 @@
 			}
 		}
 
-		$eventData["changes"]=array();
+		$eventData["modifications"]=array();
 		$DptinfoCalendarLectures[$eventData["id"]]=$eventData;
 	}
 
-	function DptinfoCalendarLectureChange($pagename, $args) {
+	function DptinfoCalendarLectureModification($pagename, $args) {
 		global $DptinfoCalendarLectures;
 
 		$a = $args;
@@ -157,6 +157,7 @@
 			case "room":
 			case "teacher":
 			case "which":
+			case "name":
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
 			default:
@@ -166,7 +167,7 @@
 		}
 
 		if (!isset($DptinfoCalendarLectures[$eventData["id"]])) { echo "<font color='red'>[<strong>DptinfoLectureChange</strong> - Unknown <em>event</em> $eventData[id] ]</font>"; }
-		else { $DptinfoCalendarLectures[$eventData["id"]]["changes"][]=$eventData; }
+		else { $DptinfoCalendarLectures[$eventData["id"]]["modifications"][]=$eventData; }
 	}
 
 	function DptinfoCalendarDates($pagename, $args) {
@@ -276,8 +277,8 @@
 			else { $script_dical.=","; }
 			$script_dical.="{";
 			foreach ($event as $cle => $valeur) {
-				if ($cle == "changes") {
-					$script_dical.=" changes: [";
+				if ($cle == "modifications") {
+					$script_dical.=" modifications: [";
 					foreach ($valeur as $notused => $chgdata) { 
 						$script_dical.=" {"; $isFV = true;
 						foreach ($chgdata as $chgkey => $chgvalue) { 
