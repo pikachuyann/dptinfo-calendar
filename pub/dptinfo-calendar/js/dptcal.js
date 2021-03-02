@@ -120,7 +120,7 @@ function dateBlocked(data, d)
 	{
 		if (!isBlocked(data.dates[i])) continue;
 		var dur = getDateDuration(data.dates[i]);
-		if (d >= dur[0] && d <= dur[1]) return true;
+		if (d >= dur[0] && d < dur[1]) return true;
 	}
 	return false;
 }
