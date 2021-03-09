@@ -265,6 +265,8 @@ function calendarLectureSummary (data, lecture) {
 	setLectureProperties(lecture, event);
 	applySettings(lecture, event);
 
+	addWebPage(data,event,"teacher");
+
 	finalizeEvent(event);
 }
 
