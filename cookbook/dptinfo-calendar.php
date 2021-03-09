@@ -336,6 +336,7 @@
 					foreach ($valeur as $notused => $chgdata) { 
 						$script_dical.=" {"; $isFV = true;
 						foreach ($chgdata as $chgkey => $chgvalue) { 
+							if ($chgkey=="id") continue;
 							$isFV ? ($isFV = false) : ($script_dical.=",");
 							$script_dical.=" $chgkey: '$chgvalue' ";
 						}
