@@ -365,7 +365,7 @@
 			} else {
 				if (isset($event["teacher"])) {
 					if ($isFirstKey) { $isFirstKey = false; } else { $script_dical.=", "; }
-					$script_dical.=" teacher: '$event[teacher]', ";
+					$script_dical.="teacher: '$event[teacher]'";
 				}
 			}
 			$script_dical.="}\n";
