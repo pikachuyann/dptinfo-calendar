@@ -424,14 +424,15 @@
 			$hdrscript="<script> $furtherJS DptinfoCalendarReady( $calCall ); </script>";
 		}
 		$HTMLHeaderFmt["DptinfoCalendarDISP$DptinfoCalendarDisplayCounter"]=$hdrscript;
+		$HTMLHeaderFmt["DptinfoCalendarDATA$DptinfoCalendarDisplayCounter"]=$script_dical;
 
 		// Increase the counter for the next calendar to be displayed, if necessary
 		$DptinfoCalendarDisplayCounter++;
 
 		if ($DptinfoCalendarDebugMode == true) {
-			return htmlspecialchars($hdrscript).htmlspecialchars($script_dical).htmlspecialchars($displayed_html).$script_dical.$displayed_html;
+			return htmlspecialchars($hdrscript).htmlspecialchars($script_dical).htmlspecialchars($displayed_html).$displayed_html;
 		} else {
-			return $script_dical.$displayed_html;
+			return $displayed_html;
 		}
 	}
 ?>
