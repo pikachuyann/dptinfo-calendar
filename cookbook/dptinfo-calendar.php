@@ -38,6 +38,8 @@
 			$headers.= DptinfoCalendarAddHeader("js", "moment.min.js");
 			$headers.= DptinfoCalendarAddHeader("js", "fullcalendar.min.js");
 			$headers.= DptinfoCalendarAddHeader("js", "dptcal.js");
+			$headers.= DptinfoCalendarAddHeader("js", "jquery-ui.min.js");
+			$headers.= DptinfoCalendarAddHeader("css", "jquery-ui.min.css");
 			$HTMLHeaderFmt['DptinfoCalendarHDS'] = $headers;
 		} $calls++;
 	}
@@ -416,7 +418,6 @@
 			$calCall.="$('#DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter'); } ); \n";
 			$calCall.="$('#DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarInner$DptinfoCalendarDisplayCounter'); } ); \n";
 		}
-
 		$calCall.= "} ";
 
 		if (! $DptinfoCalendarUseNew) {

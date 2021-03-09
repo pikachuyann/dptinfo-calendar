@@ -84,8 +84,23 @@ function applySettings(obj, event)
 
 function finalizeEvent (event)
 {
-//	even.tip = makeTips(event.tips);	// ToDo: See if makeTips is necessary and implement it if needed
+	event.tip = makeTips(event.tips);
 	calEvents.push(event);
+}
+
+function makeTips (list)
+{
+	if (list.length == 0) return "";
+	var text = "<table>";
+	jQuery.each(list, function() {
+		text+="<tr><td>";
+		if (typeof this.url == 'string')
+			text + "<a href="+this.url+"'>"+this.text+"</a>";
+		else
+			text + this.text;
+		text+="</td></tr>";
+	});
+	return text+"</table>";
 }
 
 /**************************************************************************************************************************/
@@ -289,13 +304,31 @@ function calendarDate() {
 }
 
 /**************************************************************************************************************************/
+function calApplyTooltip(event, element, view) {
+	if (typeof event.tip == "undefined") return;
+	if (typeof event.tip != "string") return;
+	if (event.tip == "") return;
+
+	element.attr("title",event.tip);
+	element.tooltip({ content: event.tip, position: {my:"center", at:"center"}, show: false });
+}
+
+function calEventRender(event, element, view)
+{
+	calApplyTooltip(event, element, view);
+
+	return true;
+}
+
+/**************************************************************************************************************************/
 
 function genCalendar(style,name,callback,addoptions)
 {
 	calEvents = [];
 	var options = dptinfoCalDefaultOptions;
 
-//	option['eventRender'] = calEventRender;
+	options['eventRender'] = calEventRender;
+
 	if (style == 'agenda')
 	{
 		options.header = { left:"", right: "prev, today, next" };
