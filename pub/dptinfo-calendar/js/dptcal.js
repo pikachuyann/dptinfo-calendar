@@ -371,7 +371,8 @@ function genCalendar(style,name,callback,addoptions)
 	}
 	
 	data = callback();
-	
+	if (! data.hasOwnProperty('people')) data.people={};
+
 	if (style == 'agenda')
 	{
 		jQuery.each(data.dates,calendarDate);
