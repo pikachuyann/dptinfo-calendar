@@ -103,6 +103,7 @@
 			case "date":
 			case "color":
 			case "url":
+			case "urltext":
 				$eventData[$key]=DptInfoCalendarSpecialChars($item);
 				break;
 			default:
@@ -136,6 +137,7 @@
 			case "last":
 			case "id":
 			case "url":
+			case "urltext":
 			case "color":
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
@@ -178,6 +180,7 @@
 			case "name":
 			case "date":
 			case "url":
+			case "urltext":
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
 			default:
@@ -315,7 +318,12 @@
 			$isFirstKey = true;
 			$script_dical.="{";
 			foreach ($event as $cle => $valeur) {
+				if ($cle == "urltext") continue;
 				if ($isFirstKey) { $isFirstKey = false; } else { $script_dical.=", "; }
+				if ($cle == "url" && isset($event["urltext"])) {
+					$script_dical.="$cle: {'$event[urltext]': '$valeur'}";
+					continue;
+				}
 				$script_dical.="$cle: '$valeur'";
 			}
 			$script_dical.="}\n";
@@ -348,7 +356,12 @@
 				} else {
 					if (preg_match('/teacher.*/',$cle)) { /* */ }
 					else {
+						if ($cle == "urltext") continue;
 						if ($isFirstKey) { $isFirstKey = false; } else { $script_dical.=", "; }
+						if ($cle == "url" && isset($event["urltext"])) {
+							$script_dical.="$cle: {'$event[urltext]': '$valeur'}";
+							continue;
+						}
 						$script_dical.="$cle: '$valeur'";
 					}
 				}
