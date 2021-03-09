@@ -63,6 +63,7 @@
 	SDVA($MarkupExpr, array('dptevent' => 'DptinfoCalendarEvent($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptlecture' => 'DptinfoCalendarLecture($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptlecturemodify' => 'DptinfoCalendarLectureModification($pagename,$argp)'));
+	SDVA($MarkupExpr, array('dptlectureadd' => 'DptinfoCalendarLectureAddition($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptcalset' => 'DptinfoCalendarSetting($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptdate' => 'DptinfoCalendarDates($pagename,$argp)'));
 
@@ -150,6 +151,7 @@
 		}
 
 		$eventData["modifications"]=array();
+		$eventData["additions"]=array();
 		$DptinfoCalendarLectures[$eventData["id"]]=$eventData;
 	}
 
@@ -184,6 +186,38 @@
 
 		if (!isset($DptinfoCalendarLectures[$eventData["id"]])) { echo "<font color='red'>[<strong>DptinfoLectureChange</strong> - Unknown <em>event</em> $eventData[id] ]</font>"; }
 		else { $DptinfoCalendarLectures[$eventData["id"]]["modifications"][]=$eventData; }
+	}
+
+	function DptinfoCalendarLectureAddition($pagename, $args) {
+		global $DptinfoCalendarLectures;
+
+		$a = $args;
+		$a = array_change_key_case($a,CASE_LOWER);
+
+		$eventData = array();
+
+		foreach ($a as $key => $item) {
+			switch ($key) {
+			case "#":
+				break;
+			case "id":
+			case "start":
+			case "end":
+			case "room":
+			case "teacher":
+			case "date":
+			case "name":
+			case "url":
+				$eventData[$key]=DptinfoCalendarSpecialChars($item);
+				break;
+			default:
+				$displaykey=DptInfoCalendarSpecialChars($key);
+				echo "<font color='red'>[<strong>DptInfoLectureAdd</strong> - Unknown key $displaykey]</font>";
+			}
+		}
+
+		if (!isset($DptinfoCalendarLectures[$eventData["id"]])) { echo "<font color='red'>[<strong>DptinfoLectureChange</strong> - Unknown <em>event</em> $eventData[id] ]</font>"; }
+		else { $DptinfoCalendarLectures[$eventData["id"]]["additions"][]=$eventData; }
 	}
 
 	function DptinfoCalendarDates($pagename, $args) {
