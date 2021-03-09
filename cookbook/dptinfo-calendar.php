@@ -320,7 +320,7 @@
 				}
 				$script_dical.="], ";
 			} else {
-				if (isset($event["teacher"])) { $script_dical.=" teacher: '$valeur', "; }
+				if (isset($event["teacher"])) { $script_dical.=" teacher: '$event[teacher]', "; }
 			}
 			$script_dical.=" debug: 'debug'";
 			$script_dical.="}\n";
