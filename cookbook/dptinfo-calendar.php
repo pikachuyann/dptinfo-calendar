@@ -20,6 +20,9 @@
 	$DptinfoCalendarDates = array();
 	$DptinfoCalendarDisplayCounter = 0;
 
+	// Default settings
+	$DptinfoCalendarGlobalSettings["startindex"]=0;
+
 	// Binds the various js scripts to be loaded to the headers, only if at least one calendar is displayed:
 	function DptinfoCalendarHeaders() {
 		global $HTMLHeaderFmt;
@@ -130,9 +133,16 @@
 			case "color":
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
+			case "teachers":
+				$eventData[$key]=intval($item);
+				break;
 			default:
-				$displaykey=DptInfoCalendarSpecialChars($key);
-				echo "<font color='red'>[<strong>DptInfoLecture</strong> - Unknown key $displaykey]</font>";
+				if (preg_match('/teacher[0-9]+/', $key)) {
+					$eventData[$key]=DptinfoCalendarSpecialChars($item);
+				} else {
+					$displaykey=DptInfoCalendarSpecialChars($key);
+					echo "<font color='red'>[<strong>DptInfoLecture</strong> - Unknown key $displaykey]</font>";
+				}
 			}
 		}
 
@@ -214,6 +224,9 @@
 			case "end":
 				$DptinfoCalendarGlobalSettings[$key]=DptinfoCalendarSpecialChars($item);
 				break;
+			case "startindex":
+				$DptinfoCalendarGlobalSettings[$key]=intval($item);
+				break;
 			default:
 				$displaykey=DptInfoCalendarSpecialChars($key);
 				echo "<font color='red'>[<strong>DptInfoCalSet</strong> - Unknown key $displaykey]</font>";
@@ -291,8 +304,23 @@
 					}
 					$script_dical.=" ], ";
 				} else {
-					$script_dical.=" $cle: '$valeur', ";
+					if (preg_match('/teacher.*/',$cle)) { /* */ }
+					else { $script_dical.=" $cle: '$valeur', "; }
 				}
+			}
+			// The "teacher" key(s) are dealt with separately to deal with the case of multiple teachers
+			if (isset($event["teachers"])) {
+				$script_dical.= " teacher: ["; $nbt = intval($event["teachers"]);
+				$stindx = $DptinfoCalendarGlobalSettings["startindex"];
+				for ($i = $stindx; $i < $stindx + $nbt; $i++) {
+					if (isset($event["teacher$i"])) {
+						if ($i!=$stindx) { $script_dical.=", "; }
+						$script_dical.="'".$event["teacher$i"]."'";
+					}
+				}
+				$script_dical.="], ";
+			} else {
+				if (isset($event["teacher"])) { $script_dical.=" teacher: '$valeur', "; }
 			}
 			$script_dical.=" debug: 'debug'";
 			$script_dical.="}\n";
