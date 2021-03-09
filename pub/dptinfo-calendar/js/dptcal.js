@@ -309,7 +309,6 @@ function calApplyTooltip(event, element, view) {
 	if (typeof event.tip != "string") return;
 	if (event.tip == "") return;
 
-	console.log(event.tip);
 	element.qtip({
 		content: event.tip,
 		position: {target: 'mouse', adjust: {mouse: false, method: 'shift'}},
