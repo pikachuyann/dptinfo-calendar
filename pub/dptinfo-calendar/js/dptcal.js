@@ -23,6 +23,7 @@ function DptinfoCalendarReady (callback) {
  */
 
 var dptinfoCalDefaultOptions = {
+	iconPath : '', // Should be defined when calling the calendar
 	defaultView : 'agendaWeek',
 	weekends : false,
 	minTime : '08:00:00',
@@ -95,6 +96,9 @@ function makeTips (list)
 	var text = "<table>";
 	jQuery.each(list, function() {
 		text+="<tr><td>";
+		if (typeof this.icon == 'string')
+			text += "<img src='"+dptinfoCalDefaultOptions.iconPath+this.icon+".png' />";
+		text+"</td><td>";
 		if (typeof this.url == 'string')
 			text += "<a href="+this.url+"'>"+this.text+"</a>";
 		else
@@ -345,6 +349,8 @@ function calEventRender(event, element, view)
 function genCalendar(style,name,callback,addoptions)
 {
 	calEvents = [];
+	if (addoptions.hasOwnProperty('iconPath'))
+		dptinfoCalDefaultOptions.iconPath = addoptions.iconPath;
 	var options = dptinfoCalDefaultOptions;
 
 	options['eventRender'] = calEventRender;
