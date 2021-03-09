@@ -95,9 +95,9 @@ function makeTips (list)
 	jQuery.each(list, function() {
 		text+="<tr><td>";
 		if (typeof this.url == 'string')
-			text + "<a href="+this.url+"'>"+this.text+"</a>";
+			text += "<a href="+this.url+"'>"+this.text+"</a>";
 		else
-			text + this.text;
+			text += this.text;
 		text+="</td></tr>";
 	});
 	return text+"</table>";
@@ -309,8 +309,12 @@ function calApplyTooltip(event, element, view) {
 	if (typeof event.tip != "string") return;
 	if (event.tip == "") return;
 
-	element.attr("title",event.tip);
-	element.tooltip({ content: event.tip, position: {my:"center", at:"center"}, show: false });
+	console.log(event.tip);
+	element.qtip({
+		content: event.tip,
+		position: {target: 'mouse', adjust: {mouse: false, method: 'shift'}},
+		show: {solo: true}
+	});
 }
 
 function calEventRender(event, element, view)

@@ -38,8 +38,8 @@
 			$headers.= DptinfoCalendarAddHeader("js", "moment.min.js");
 			$headers.= DptinfoCalendarAddHeader("js", "fullcalendar.min.js");
 			$headers.= DptinfoCalendarAddHeader("js", "dptcal.js");
-			$headers.= DptinfoCalendarAddHeader("js", "jquery-ui.min.js");
-			$headers.= DptinfoCalendarAddHeader("css", "jquery-ui.min.css");
+			$headers.= DptinfoCalendarAddHeader("js", "jquery.qtip.min.js");
+			$headers.= DptinfoCalendarAddHeader("css", "jquery.qtip.min.css");
 			$HTMLHeaderFmt['DptinfoCalendarHDS'] = $headers;
 		} $calls++;
 	}
