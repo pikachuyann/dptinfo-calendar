@@ -99,6 +99,7 @@
 			case "speaker":
 			case "date":
 			case "color":
+			case "url":
 				$eventData[$key]=DptInfoCalendarSpecialChars($item);
 				break;
 			default:
@@ -131,6 +132,7 @@
 			case "first":
 			case "last":
 			case "id":
+			case "url":
 			case "color":
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
@@ -171,6 +173,7 @@
 			case "which":
 			case "name":
 			case "date":
+			case "url":
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
 			default:
