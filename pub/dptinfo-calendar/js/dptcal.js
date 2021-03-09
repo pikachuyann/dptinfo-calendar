@@ -177,6 +177,17 @@ function finalizeLecture(data,events)
 	}
 }
 
+function addLectures(data,lecture,events) {
+	if (typeof lecture.additions == 'undefined') return;
+	for (var i in lecture.additions)
+	{
+		var d = lecture.additions[i].date;
+		events[d] = genLectureEvent(data,lecture,d, lecture.additions[i].start, lecture.additions[i].end);
+		setLectureProperties(lecture.additions[i],events[d]);
+		applySettings(lecture.additions[i],events[d]);
+	}
+}
+
 function applyModifications(events, modif) {
 	var event = events[modif.which];
 	if (typeof event == 'undefined') { console.log("No event at date "+modif.which+" for "+modif.id+"."); return; }
@@ -220,6 +231,7 @@ function calendarLecture (data, lecture) {
 		events[cDate] = genLectureEvent(data,lecture,cDate,lecture.start,lecture.end);
 	}
 
+	addLectures(data, lecture, events);
 	if (typeof lecture.modifications != 'undefined')
 		for (var m in lecture.modifications) applyModifications(events,lecture.modifications[m]);
 
