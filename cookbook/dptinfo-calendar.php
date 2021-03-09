@@ -285,6 +285,7 @@
 		$a = array_change_key_case($a,CASE_LOWER);
 
 		$isFirstEvent = true;
+		$isFirstKey = true;
 
 		$script_dical="<script>\n";
 		$script_dical.="function dptinfoCalendar$DptinfoCalendarDisplayCounter() {\n";
@@ -297,9 +298,9 @@
 		foreach ($DptinfoCalendarDates as $key => $event) {
 			if ($isFirstEvent) { $isFirstEvent = false; }
 			else { $script_dical.=","; }
+			$isFirstKey = true;
 			$script_dical.="{";
-			foreach ($event as $cle => $valeur) { $script_dical.=" $cle: '$valeur', "; }
-			$script_dical.=" debug: 'debug'";
+			foreach ($event as $cle => $valeur) { if ($isFirstKey) { $isFirstKey = false; } else { $script_dical.=", "; } $script_dical.="$cle: '$valeur'"; }
 			$script_dical.="}\n";
 		}
 		$script_dical.="]\n";
@@ -309,15 +310,12 @@
 		foreach ($DptinfoCalendarEvents as $key => $event) {
 			if ($isFirstEvent) { $isFirstEvent = false; }
 			else { $script_dical.=","; }
+			$isFirstKey = true;
 			$script_dical.="{";
-			if (isset($event["date"])) { $script_dical.=" date: '$event[date]', "; }
-			if (isset($event["start"])) { $script_dical.=" start: '$event[start]', "; }
-			if (isset($event["end"])) { $script_dical.=" end: '$event[end]', "; }
-			if (isset($event["room"])) { $script_dical.=" room: '$event[room]', "; }
-			if (isset($event['speaker'])) { $script_dical.=" speaker: '$event[speaker]', "; }
-			if (isset($event["name"])) { $script_dical.=" name: '$event[name]', "; }
-			if (isset($event["color"])) { $script_dical.=" color: '$event[color]', "; }
-			$script_dical.=" debug: 'debug'";
+			foreach ($event as $cle => $valeur) {
+				if ($isFirstKey) { $isFirstKey = false; } else { $script_dical.=", "; }
+				$script_dical.="$cle: '$valeur'";
+			}
 			$script_dical.="}\n";
 		}
 		$script_dical.="]\n";
@@ -329,10 +327,12 @@
 			if ($isFirstEvent) { $isFirstEvent = false; }
 			else { $script_dical.=","; }
 			$script_dical.="{";
+			$isFirstKey = true;
 			foreach ($event as $cle => $valeur) {
 				if ($cle == "modifications" || $cle == "additions") {
 					if (count($valeur)==0) continue;
-					$script_dical.=" $cle: [";
+					if ($isFirstKey) { $isFirstKey = false; } else { $script_dical.=", "; }
+					$script_dical.="$cle: [";
 					foreach ($valeur as $notused => $chgdata) { 
 						$script_dical.=" {"; $isFV = true;
 						foreach ($chgdata as $chgkey => $chgvalue) { 
@@ -341,15 +341,19 @@
 						}
 						$script_dical.=" }, ";
 					}
-					$script_dical.=" ], ";
+					$script_dical.="]";
 				} else {
 					if (preg_match('/teacher.*/',$cle)) { /* */ }
-					else { $script_dical.=" $cle: '$valeur', "; }
+					else {
+						if ($isFirstKey) { $isFirstKey = false; } else { $script_dical.=", "; }
+						$script_dical.="$cle: '$valeur'";
+					}
 				}
 			}
 			// The "teacher" key(s) are dealt with separately to deal with the case of multiple teachers
 			if (isset($event["teachers"])) {
-				$script_dical.= " teacher: ["; $nbt = intval($event["teachers"]);
+				if ($isFirstKey) { $isFirstKey = false; } else { $script_dical.=", "; }
+				$script_dical.= "teacher: ["; $nbt = intval($event["teachers"]);
 				$stindx = $DptinfoCalendarGlobalSettings["startindex"];
 				for ($i = $stindx; $i < $stindx + $nbt; $i++) {
 					if (isset($event["teacher$i"])) {
@@ -357,11 +361,13 @@
 						$script_dical.="'".$event["teacher$i"]."'";
 					}
 				}
-				$script_dical.="], ";
+				$script_dical.="]";
 			} else {
-				if (isset($event["teacher"])) { $script_dical.=" teacher: '$event[teacher]', "; }
+				if (isset($event["teacher"])) {
+					if ($isFirstKey) { $isFirstKey = false; } else { $script_dical.=", "; }
+					$script_dical.=" teacher: '$event[teacher]', ";
+				}
 			}
-			$script_dical.=" debug: 'debug'";
 			$script_dical.="}\n";
 		}
 		$script_dical.="]";
