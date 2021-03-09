@@ -129,6 +129,7 @@
 			case "speaker":
 			case "teacher":
 			case "first":
+			case "last":
 			case "id":
 			case "color":
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
