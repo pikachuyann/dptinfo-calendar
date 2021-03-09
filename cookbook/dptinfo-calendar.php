@@ -379,7 +379,7 @@
 
 		$displayed_html="<div id='DptinfoCalendar$DptinfoCalendarDisplayCounter'>";
 		if (isset($a["showschedule"])) {
-			$displayed_html.="<button id='DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter'>Shedule</button>";
+			$displayed_html.="<button id='DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter'>Schedule</button>";
 			$displayed_html.="<button id='DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter'>Agenda</button>";
 		}
 		$displayed_html.="<div id='DptinfoCalendarInner$DptinfoCalendarDisplayCounter'> </div> ";
