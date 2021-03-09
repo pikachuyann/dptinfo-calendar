@@ -248,6 +248,46 @@ function calendarLectureSummary (data, lecture) {
 	finalizeEvent(event);
 }
 
+function setDateTitle(dev, event)
+{
+	if (typeof dev.vacances == "string") event.title="Vacances ("+dev.vacances+")";
+	if (typeof dev.holidays == "string") event.title="Holidays ("+dev.holidays+")";
+	if (typeof dev.ferie == "string") event.title=dev.ferie;
+	if (typeof dev.holiday == "string") event.title="Holiday ("+dev.holiday+")";
+	if (typeof dev.visit == "string") event.title="Lab Visit ("+dev.visit+")";
+	if (typeof dev.visite == "string") event.title="Visite de Labo ("+dev.visite+")";
+}
+
+function setDateColor(dev, event)
+{
+	event.color = "beige";
+	if (dev.vacances || dev.holidays) event.color="greenyellow";
+	if (dev.ferie || dev.holiday) event.color="greenyellow";
+	if (dev.visit || dev.visite) event.color="lightpink";
+}
+
+function calendarDate() {
+	var blocked = isBlocked(this);
+
+	var event1 = newEvent(getDateDuration(this));
+	setDateTitle(this,event1);
+	setDateColor(this,event1);
+	applySettings(this,event1);
+	var event2 = new jQuery.extend({}, event1);
+
+	if (blocked) event1.color = "transparent";
+	finalizeEvent(event1);
+	if (!blocked) return;
+
+	event2.rendering='background';
+	finalizeEvent(event2);
+
+	var event3 = new jQuery.extend({}, event2);
+	event2.start += "T00:00";
+	event2.end += "T00:00";
+	finalizeEvent(event3);
+}
+
 /**************************************************************************************************************************/
 
 function genCalendar(style,name,callback,addoptions)
@@ -274,6 +314,7 @@ function genCalendar(style,name,callback,addoptions)
 	
 	if (style == 'agenda')
 	{
+		jQuery.each(data.dates,calendarDate);
 		jQuery.each(data.events,function() { calendarEvent(data,this); });
 		jQuery.each(data.lectures,function() { calendarLecture(data,this); });
 	} else if (style == 'schedule') {
