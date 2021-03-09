@@ -31,7 +31,8 @@ var dptinfoCalDefaultOptions = {
 	slotEventOverlap : false,
 	eventTextColor : 'black',
 	allDaySlot : false,
-	slotLabelFormat : 'HH:mm'
+	slotLabelFormat : 'HH:mm',
+	timeFormat : 'HH:mm'
 };
 
 var dows = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi'];
