@@ -17,6 +17,7 @@
 	$DptinfoCalendarEvents = array();
 	$DptinfoCalendarLectures = array();
 	$DptinfoCalendarGlobalSettings = array();
+	$DptinfoCalendarPeople = array();
 	$DptinfoCalendarDates = array();
 	$DptinfoCalendarDisplayCounter = 0;
 
@@ -68,6 +69,7 @@
 	SDVA($MarkupExpr, array('dptlectureadd' => 'DptinfoCalendarLectureAddition($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptcalset' => 'DptinfoCalendarSetting($pagename,$argp)'));
 	SDVA($MarkupExpr, array('dptdate' => 'DptinfoCalendarDates($pagename,$argp)'));
+	SDVA($MarkupExpr, array('dptperson' => 'DptinfoCalendarPerson($pagename,$argp)'));
 
 	// Sort of a "hook" to make another PmWiki function actually parse the arguments
 	function DptinfoCalendarDisplayHook($arguments) {
@@ -275,6 +277,33 @@
 				echo "<font color='red'>[<strong>DptInfoCalSet</strong> - Unknown key $displaykey]</font>";
 			}
 		}
+	}
+
+	function DptinfoCalendarPerson($pagename, $args) {
+		global $DptinfoCalendarPeople;
+
+		$a = $args;
+		$a = array_change_key_case($a,CASE_LOWER);
+
+		$personData = array();
+
+		foreach ($a as $key => $item) {
+			switch ($key) {
+			case "#":
+				break;
+			case "name":
+			case "url":
+				$personData[$key]=DptinfoCalendarSpecialChars($item);
+				break;
+			default:
+				$displaykey=DptInfoCalendarSpecialChars($key);
+				echo "<font color='red'>[<strong>DptinfoPerson</strong> - Unknown key $displaykey]</font>";
+			}
+		}
+
+		if (!isset($personData["name"])) { echo "<font color='red'>[<strong>DptinfoPerson</strong> - Unspecified name"; }
+		elseif (isset($DptinfoCalendarPeople[$personData["name"]])) { echo "<font color='red'>[<strong>DptinfoPersonn</strong> - Had already stored info for $personData[name]</font>"; }
+		$DptinfoCalendarPeople[$personData["name"]] = $personData;
 	}
 
 	function DptinfoCalendarDisplay($pagename, $args) {
