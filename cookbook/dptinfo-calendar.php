@@ -308,7 +308,7 @@
 
 	function DptinfoCalendarDisplay($pagename, $args) {
 		global $DptinfoCalendarEvents, $DptinfoCalendarDisplayCounter, $DptinfoCalendarLectures, $DptinfoCalendarGlobalSettings;
-		global $DptinfoCalendarDates;
+		global $DptinfoCalendarDates, $DptinfoCalendarPeople;
 		global $DptinfoCalendarUseNew;
 		global $DptinfoCalendarDebugMode;
 		global $HTMLHeaderFmt;
@@ -338,6 +338,18 @@
 			$script_dical.="}\n";
 		}
 		$script_dical.="]\n";
+		// Create the list of People
+		$isFirstEvent = true;
+		foreach ($DptinfoCalendarPeople as $name => $person) {
+			if (!isset($person["url"])) continue;
+			if ($isFirstEvent) {
+				$script_dical.=",people: {";
+				$isFirstEvent = false;
+			} else { $script_dical.=","; }
+			$isFirstKey = true;
+			$script_dical.="'$name': '$person[url]'";
+		}
+		if (!$isFirstEvent) { $script_dical.="}\n"; }
 		// Create the list of Events
 		$isFirstEvent = true;
 		$script_dical.=", events : [\n";
