@@ -330,8 +330,9 @@
 			else { $script_dical.=","; }
 			$script_dical.="{";
 			foreach ($event as $cle => $valeur) {
-				if ($cle == "modifications") {
-					$script_dical.=" modifications: [";
+				if ($cle == "modifications" || $cle == "additions") {
+					if (count($valeur)==0) continue;
+					$script_dical.=" $cle: [";
 					foreach ($valeur as $notused => $chgdata) { 
 						$script_dical.=" {"; $isFV = true;
 						foreach ($chgdata as $chgkey => $chgvalue) { 
