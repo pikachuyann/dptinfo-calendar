@@ -30,10 +30,6 @@
 		static $calls = 0; // Avoids the headers being set multiple times
 
 		if ($calls > 0) { } else {
-			$http_path=dirname($_SERVER["PHP_SELF"]);
-			if ($http_path != "/") { $http_path=$http_path."/"; }
-			$JSPath=$http_path."pub/dptinfo-calendar/js";
-			$CSSPath=$http_path."pub/dptinfo-calendar/css";
 			$headers = DptinfoCalendarAddHeader("css", "fullcalendar.css");
 			$headers.= DptinfoCalendarAddHeader("js", "jquery.min.js");
 			$headers.= DptinfoCalendarAddHeader("js", "moment.min.js");
@@ -45,12 +41,21 @@
 		} $calls++;
 	}
 
-	function DptinfoCalendarAddHeader($type, $file) {
-		$http_path=dirname($_SERVER["PHP_SELF"]);
+	function DptinfoCalendarGetHTTPPath() {
+		$http_path = dirname($_SERVER["PHP_SELF"]);
 		if ($http_path != "/") { $http_path=$http_path."/"; }
+		return $http_path;
+	}
+	function DptinfoCalendarGetPMWikiPath() {
 		$pmwiki_path=dirname(__FILE__); // That is the path to the current recipe.
 		$pmwiki_path=dirname($pmwiki_path); // This should be the path to pmwiki main directory
 		if ($pmwiki_path != "/") { $pmwiki_path=$pmwiki_path."/"; }
+		return $pmwiki_path;
+	}
+
+	function DptinfoCalendarAddHeader($type, $file) {
+		$http_path=DptinfoCalendarGetHTTPPath();
+		$pmwiki_path=DptinfoCalendarGetPMWikiPath();
 		if ($type == "js") { $path="pub/dptinfo-calendar/js/"; }
 		else if ($type == "css") { $path="pub/dptinfo-calendar/css/"; }
 		else { return ""; } // Unknown file type, do not try further things.
@@ -463,6 +468,7 @@
 		}
 		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, ";
 		$calCall.= "{"; // options start
+		$calCall.=" iconPath:'".DptInfoCalendarSpecialChars(DptInfoCalendarGetHTTPPath()."pub/dptinfo-calendar/icons/")."'"; $callvirg=",";
 		if (isset($a["startdate"])) { $calCall.="$callvirg startDate:\"".DptInfoCalendarSpecialChars($a["startdate"])."\""; $callvirg=","; }
 		$calCall.= "} "; //options end
 		//		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, DptinfoCalendarOptions$DptinfoCalendarDisplayCounter); ";
