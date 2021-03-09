@@ -152,6 +152,7 @@ function calendarEvent (data, cev)
 
 	event.title = event.ev_name + "\n" + event.ev_room + "\n" + getEventProperty(event, "speaker");
 
+	addWebPage(data,event,"speaker");
 	applySettings(cev, event);
 	finalizeEvent(event);
 }
@@ -172,6 +173,9 @@ function setLectureProperties (lecture, event)
 	setEventProperty(lecture, event, "teacher", "");
 	setEventProperty(lecture, event, "room", "");
 
+	if (typeof lecture.url == 'string')
+		lecture.url = { 'Course webpage': lecture.url };
+
 	event.title = event.ev_name + "\n" + event.ev_room + "\n" + getEventProperty(event, "teacher");
 }
 
@@ -188,6 +192,7 @@ function finalizeLecture(data,events)
 {
 	for (var cDate in events)
 	{
+		addWebPage(data,events[cDate],"teacher");
 		finalizeEvent(events[cDate]);
 	}
 }
@@ -304,6 +309,15 @@ function calendarDate() {
 }
 
 /**************************************************************************************************************************/
+function addWebPage(data, event, key) {
+	jQuery.each(getEventProperty(event,key).split("\n"),function() {
+		console.log(this);
+		console.log(data.people[this]);
+		if (data.people[this])
+			event.tips.push( { icon: 'person', url: data.people[this], text: this + " webpage" } );
+	});
+}
+
 function calApplyTooltip(event, element, view) {
 	if (typeof event.tip == "undefined") return;
 	if (typeof event.tip != "string") return;
