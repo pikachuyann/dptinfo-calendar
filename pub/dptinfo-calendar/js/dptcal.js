@@ -299,6 +299,7 @@ function genCalendar(style,name,callback,addoptions)
 	if (style == 'agenda')
 	{
 		options.header = { left:"", right: "prev, today, next" };
+		options.allDaySlot = true;
 		options.columnFormat = "dddd D/M";
 	}
 	else if (style == "schedule" || style == "hebdo" || style == "semaine")
