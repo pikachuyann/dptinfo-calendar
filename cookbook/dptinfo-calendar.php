@@ -7,9 +7,7 @@
 	 * GOAL : Be able to use wiki markups to fill and display a calendar through a modified version of FullCalendar that is used in the Computer Science department of ENS Paris-Saclay, France
 	 ***/
 
-	// THIS IS A WORK IN PROGRESS - 2021-01-12
-
-	$RecipeInfo['DptinfoCalendar']['version'] = 'alpha';
+	$RecipeInfo['DptinfoCalendar']['version'] = '0.1.0';
 
 	/** To easily distinguish with other recipes, the global variables contain the (wikified?) name of the recipe, which is long; maybe this is not a good idea. **/
 
