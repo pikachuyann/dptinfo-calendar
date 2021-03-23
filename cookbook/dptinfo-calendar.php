@@ -95,36 +95,35 @@
 	// Sort of a "hook" to make another PmWiki function actually parse the arguments
 	function DptinfoCalendarDisplayHook($arguments) {
 		global $pagename;
-		echo "[DCDH: $arguments[1]]";
-		return DptinfoCalendarDisplay($pagename, PSS($arguments[1]));
+		return DptinfoCalendarDisplay($pagename, ParseArgs(PSS($arguments[1])));
 	}
 	function DptinfoCalendarEventHook($arguments) {
 		global $pagename;
-		return DptinfoCalendarEvent($pagename, PSS($arguments[1]));
+		return DptinfoCalendarEvent($pagename, ParseArgs(PSS($arguments[1])));
 	}
 	function DptinfoCalendarLectureHook($arguments) {
 		global $pagename;
-		return DptinfoCalendarLecture($pagename, PSS($arguments[1]));
+		return DptinfoCalendarLecture($pagename, ParseArgs(PSS($arguments[1])));
 	}
 	function DptinfoCalendarLectureModificationHook($arguments) {
 		global $pagename;
-		return DptinfoCalendarLectureModification($pagename, PSS($arguments[1]));
+		return DptinfoCalendarLectureModification($pagename, ParseArgs(PSS($arguments[1])));
 	}
 	function DptinfoCalendarLectureAdditionHook($arguments) {
 		global $pagename;
-		return DptinfoCalendarLectureAddition($pagename, PSS($arguments[1]));
+		return DptinfoCalendarLectureAddition($pagename, ParseArgs(PSS($arguments[1])));
 	}
 	function DptinfoCalendarSettingHook($arguments) {
 		global $pagename;
-		return DptinfoCalendarSetting($pagename, PSS($arguments[1]));
+		return DptinfoCalendarSetting($pagename, ParseArgs(PSS($arguments[1])));
 	}
 	function DptinfoCalendarDatesHook($arguments) {
 		global $pagename;
-		return DptinfoCalendarDates($pagename, PSS($arguments[1]));
+		return DptinfoCalendarDates($pagename, ParseArgs(PSS($arguments[1])));
 	}
 	function DptinfoCalendarPersonHook($arguments) {
 		global $pagename;
-		return DptinfoCalendarPerson($pagename, PSS($arguments[1]));
+		return DptinfoCalendarPerson($pagename, ParseArgs(PSS($arguments[1])));
 	}
 
 	function DptInfoCalendarSpecialChars($string) {
@@ -365,7 +364,6 @@
 
 		DptinfoCalendarHeaders();
 
-		$a = ParseArgs($args);
 		$a = array_change_key_case($a,CASE_LOWER);
 
 		$isFirstEvent = true;
