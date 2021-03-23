@@ -67,19 +67,64 @@
 	// ToDo : minimise the number of javascript and css scripts used
 
 	// Binds the various markups
-	Markup('DptinfoCalendar', 'directives', '/\\(:dptcal(.*):\\)/', "DptinfoCalendarDisplayHook");
+	Markup('DptinfoCalendar', 'directives', '/\\(:dptcal (.*):\\)/', "DptinfoCalendarDisplayHook");
+	Markup('DptinfoCalendarNA', 'directives', '/\\(:dptcal:\\)/', "DptinfoCalendarDisplayHook");
+	SDVA($MarkupExpr, array('dptcal' => 'DptinfoCalendarDisplay($pagename,$argp)'));
+	Markup('DptinfoEvent', 'directives', '/\\(:dptevent (.*):\\)/', "DptinfoCalendarEventHook");
+	Markup('DptinfoEventNA', 'directives', '/\\(:dptevent:\\)/', "DptinfoCalendarEventHook");
 	SDVA($MarkupExpr, array('dptevent' => 'DptinfoCalendarEvent($pagename,$argp)'));
+	Markup('DptinfoLecture', 'directives', '/\\(:dptlecture (.*):\\)/', "DptinfoCalendarLectureHook");
+	Markup('DptinfoLectureNA', 'directives', '/\\(:dptlecture:\\)/', "DptinfoCalendarLectureHook");
 	SDVA($MarkupExpr, array('dptlecture' => 'DptinfoCalendarLecture($pagename,$argp)'));
+	Markup('DptinfoLectureModification', 'directives', '/\\(:dptlecturemodify (.*):\\)/', "DptinfoCalendarLectureModificationHook");
+	Markup('DptinfoLectureModificationNA', 'directives', '/\\(:dptlecturemodify:\\)/', "DptinfoCalendarLectureModificationHook");
 	SDVA($MarkupExpr, array('dptlecturemodify' => 'DptinfoCalendarLectureModification($pagename,$argp)'));
+	Markup('DptinfoLectureAddition', 'directives', '/\\(:dptlectureadd (.*):\\)/', "DptinfoCalendarLectureAdditionHook");
+	Markup('DptinfoLectureAdditionNA', 'directives', '/\\(:dptlectureadd:\\)/', "DptinfoCalendarLectureAdditionHook");
 	SDVA($MarkupExpr, array('dptlectureadd' => 'DptinfoCalendarLectureAddition($pagename,$argp)'));
+	Markup('DptinfoCalendarSetting', 'directives', '/\\(:dptcalset (.*):\\)/', "DptinfoCalendarSettingHook");
+	Markup('DptinfoCalendarSettingNA', 'directives', '/\\(:dptcalset:\\)/', "DptinfoCalendarSettingHook");
 	SDVA($MarkupExpr, array('dptcalset' => 'DptinfoCalendarSetting($pagename,$argp)'));
+	Markup('DptinfoCalendarDate', 'directives', '/\\(:dptdate (.*):\\)/', "DptinfoCalendarDatesHook");
+	Markup('DptinfoCalendarDateNA', 'directives', '/\\(:dptdate:\\)/', "DptinfoCalendarDatesHook");
 	SDVA($MarkupExpr, array('dptdate' => 'DptinfoCalendarDates($pagename,$argp)'));
+	Markup('DptinfoCalendarPerson', 'directives', '/\\(:dptperson (.*):\\)/', "DptinfoCalendarPersonHook");
+	Markup('DptinfoCalendarPersonNA', 'directives', '/\\(:dptperson:\\)/', "DptinfoCalendarPersonHook");
 	SDVA($MarkupExpr, array('dptperson' => 'DptinfoCalendarPerson($pagename,$argp)'));
 
 	// Sort of a "hook" to make another PmWiki function actually parse the arguments
 	function DptinfoCalendarDisplayHook($arguments) {
 		global $pagename;
+		echo "[DCDH: $arguments[1]]";
 		return DptinfoCalendarDisplay($pagename, PSS($arguments[1]));
+	}
+	function DptinfoCalendarEventHook($arguments) {
+		global $pagename;
+		return DptinfoCalendarEvent($pagename, PSS($arguments[1]));
+	}
+	function DptinfoCalendarLectureHook($arguments) {
+		global $pagename;
+		return DptinfoCalendarLecture($pagename, PSS($arguments[1]));
+	}
+	function DptinfoCalendarLectureModificationHook($arguments) {
+		global $pagename;
+		return DptinfoCalendarLectureModification($pagename, PSS($arguments[1]));
+	}
+	function DptinfoCalendarLectureAdditionHook($arguments) {
+		global $pagename;
+		return DptinfoCalendarLectureAddition($pagename, PSS($arguments[1]));
+	}
+	function DptinfoCalendarSettingHook($arguments) {
+		global $pagename;
+		return DptinfoCalendarSetting($pagename, PSS($arguments[1]));
+	}
+	function DptinfoCalendarDatesHook($arguments) {
+		global $pagename;
+		return DptinfoCalendarDates($pagename, PSS($arguments[1]));
+	}
+	function DptinfoCalendarPersonHook($arguments) {
+		global $pagename;
+		return DptinfoCalendarPerson($pagename, PSS($arguments[1]));
 	}
 
 	function DptInfoCalendarSpecialChars($string) {
