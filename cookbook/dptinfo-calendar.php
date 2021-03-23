@@ -364,6 +364,7 @@
 
 		DptinfoCalendarHeaders();
 
+		$a = $args;
 		$a = array_change_key_case($a,CASE_LOWER);
 
 		$isFirstEvent = true;
