@@ -14,7 +14,9 @@
 	// Event list:
 	$DptinfoCalendarEvents = array();
 	$DptinfoCalendarLectures = array();
-	$DptinfoCalendarGlobalSettings = array();
+	if (!isset($DptinfoCalendarGlobalSettings)) {
+		$DptinfoCalendarGlobalSettings = array();
+	}
 	$DptinfoCalendarPeople = array();
 	$DptinfoCalendarDates = array();
 	$DptinfoCalendarDisplayCounter = 0;
@@ -24,12 +26,14 @@
 
 	// Binds the various js scripts to be loaded to the headers, only if at least one calendar is displayed:
 	function DptinfoCalendarHeaders() {
-		global $HTMLHeaderFmt;
+		global $HTMLHeaderFmt, $DptinfoCalendarGlobalSettings;
 		static $calls = 0; // Avoids the headers being set multiple times
 
 		if ($calls > 0) { } else {
 			$headers = DptinfoCalendarAddHeader("css", "fullcalendar.css");
-			$headers.= DptinfoCalendarAddHeader("js", "jquery.min.js");
+			if (!isset($DptinfoCalendarGlobalSettings["noJQuery"])) {
+				$headers.= DptinfoCalendarAddHeader("js", "jquery.min.js");
+			}
 			$headers.= DptinfoCalendarAddHeader("js", "moment.min.js");
 			$headers.= DptinfoCalendarAddHeader("js", "fullcalendar.min.js");
 			$headers.= DptinfoCalendarAddHeader("js", "dptcal.js");
