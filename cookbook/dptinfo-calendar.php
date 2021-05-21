@@ -84,6 +84,9 @@
 	Markup('DptinfoLectureAddition', 'directives', '/\\(:dptlectureadd (.*):\\)/', "DptinfoCalendarLectureAdditionHook");
 	Markup('DptinfoLectureAdditionNA', 'directives', '/\\(:dptlectureadd:\\)/', "DptinfoCalendarLectureAdditionHook");
 	SDVA($MarkupExpr, array('dptlectureadd' => 'DptinfoCalendarLectureAddition($pagename,$argp)'));
+	MarkUp('DptinfoLectureDeletion', 'directives', '/\\(:dptlecturedel (.*):\\)/', "DptinfoCalendarLectureDeletionHook");
+	MarkUp('DptinfoLectureDeletionNA', 'directives', '/\\(:dptlecturedel:\\)/', "DptinfoCalendarLectureDeletionHook");
+	SDVA($MarkupExpr, array('dptlecturedel' => 'DptinfoCalendarLectureDeletion($pagenarme,$argp)'));
 	Markup('DptinfoCalendarSetting', 'directives', '/\\(:dptcalset (.*):\\)/', "DptinfoCalendarSettingHook");
 	Markup('DptinfoCalendarSettingNA', 'directives', '/\\(:dptcalset:\\)/', "DptinfoCalendarSettingHook");
 	SDVA($MarkupExpr, array('dptcalset' => 'DptinfoCalendarSetting($pagename,$argp)'));
@@ -114,6 +117,10 @@
 	function DptinfoCalendarLectureAdditionHook($arguments) {
 		global $pagename;
 		return DptinfoCalendarLectureAddition($pagename, ParseArgs(PSS($arguments[1])));
+	}
+	function DptinfoCalendarLectureDeletionHook($arguments) {
+		global $pagename;
+		return DptinfoCalendarLectureDeletion($pagename, ParseArgs(PSS($arguments[1])));
 	}
 	function DptinfoCalendarSettingHook($arguments) {
 		global $pagename;
@@ -209,6 +216,7 @@
 
 		$eventData["modifications"]=array();
 		$eventData["additions"]=array();
+		$eventData["deletions"]=array();
 		$DptinfoCalendarLectures[$eventData["id"]]=$eventData;
 	}
 
@@ -276,6 +284,31 @@
 
 		if (!isset($DptinfoCalendarLectures[$eventData["id"]])) { echo "<font color='red'>[<strong>DptinfoLectureChange</strong> - Unknown <em>event</em> $eventData[id] ]</font>"; }
 		else { $DptinfoCalendarLectures[$eventData["id"]]["additions"][]=$eventData; }
+	}
+
+	function DptinfoCalendarLectureDeletion($pagename, $args) {
+		global $DptinfoCalendarLectures;
+
+		$a = $args;
+		$a = array_change_key_case($a,CASE_LOWER);
+
+		$eventData = array();
+
+		foreach ($a as $key => $item) {
+			switch ($key) {
+			case "#":
+				break;
+			case "id":
+			case "date":
+				$eventData[$key]=DptinfoCalendarSpecialChars($item);
+			default:
+				$displaykey=DptinfoCalendarSpecialChars($key);
+				echo "<font color='red'>[<strong>DptinfoLectureDelete</strong> - Unknown key $displaykey]</font>";
+			}
+		}
+
+		if (!isset($DptinfoCalendarLectures[$eventData["id"]])) { echo "<font color='red'>[<strong>DptinfoLectureDelete</strong> - Unknown <em>event</em> $eventData[id] ]</font>"; }
+		else { $DptinfoCalendarLectures[$eventData["id"]]["deletions"][]=$eventData; }
 	}
 
 	function DptinfoCalendarDates($pagename, $args) {
