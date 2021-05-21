@@ -299,8 +299,9 @@
 			case "#":
 				break;
 			case "id":
-			case "date":
+			case "which":
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
+				break;
 			default:
 				$displaykey=DptinfoCalendarSpecialChars($key);
 				echo "<font color='red'>[<strong>DptinfoLectureDelete</strong> - Unknown key $displaykey]</font>";
