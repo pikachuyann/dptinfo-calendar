@@ -291,10 +291,12 @@
 			case "#":
 				break;
 			case "holidays":
+			case "holiday":
 			case "test":
 			case "visit":
 			case "start":
 			case "end":
+			case "date":
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
 			default:
