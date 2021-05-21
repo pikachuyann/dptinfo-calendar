@@ -292,6 +292,7 @@
 				break;
 			case "holidays":
 			case "holiday":
+			case "exams":
 			case "test":
 			case "visit":
 			case "start":

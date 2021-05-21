@@ -283,6 +283,8 @@ function setDateTitle(dev, event)
 	if (typeof dev.holiday == "string") event.title="Holiday ("+dev.holiday+")";
 	if (typeof dev.visit == "string") event.title="Lab Visit ("+dev.visit+")";
 	if (typeof dev.visite == "string") event.title="Visite de Labo ("+dev.visite+")";
+	if (typeof dev.epreuves == "string") event.title="Épreuves ("+dev.epreuves+")";
+	if (typeof dev.exams == "string") event.title="Exams ("+dev.exams+")";
 }
 
 function setDateColor(dev, event)
