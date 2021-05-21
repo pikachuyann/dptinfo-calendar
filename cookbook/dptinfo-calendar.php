@@ -135,7 +135,7 @@
 		return DptinfoCalendarPerson($pagename, ParseArgs(PSS($arguments[1])));
 	}
 
-	function DptInfoCalendarSpecialChars($string) {
+	function DptinfoCalendarSpecialChars($string) {
 		$newstring = PHSC($string); // PHSC is an equivalent to htmlspecialchars that is defined in PmWiki to deal with the different possible encodings.
 		$ns2 = preg_replace("/'/", "&quot;", $newstring);
 		$ns3 = preg_replace('/"/', "&dquo;", $ns2);
@@ -164,10 +164,10 @@
 			case "color":
 			case "url":
 			case "urltext":
-				$eventData[$key]=DptInfoCalendarSpecialChars($item);
+				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
 			default:
-				$displaykey=DptInfoCalendarSpecialChars($key);
+				$displaykey=DptinfoCalendarSpecialChars($key);
 				echo "<font color='red'>[<strong>DptInfoEvent</strong> - Unknown key $displaykey]</font>";
 			}
 		}
@@ -208,7 +208,7 @@
 				if (preg_match('/teacher[0-9]+/', $key)) {
 					$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				} else {
-					$displaykey=DptInfoCalendarSpecialChars($key);
+					$displaykey=DptinfoCalendarSpecialChars($key);
 					echo "<font color='red'>[<strong>DptInfoLecture</strong> - Unknown key $displaykey]</font>";
 				}
 			}
@@ -245,7 +245,7 @@
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
 			default:
-				$displaykey=DptInfoCalendarSpecialChars($key);
+				$displaykey=DptinfoCalendarSpecialChars($key);
 				echo "<font color='red'>[<strong>DptInfoLectureModify</strong> - Unknown key $displaykey]</font>";
 			}
 		}
@@ -277,7 +277,7 @@
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
 			default:
-				$displaykey=DptInfoCalendarSpecialChars($key);
+				$displaykey=DptinfoCalendarSpecialChars($key);
 				echo "<font color='red'>[<strong>DptInfoLectureAdd</strong> - Unknown key $displaykey]</font>";
 			}
 		}
@@ -334,7 +334,7 @@
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
 			default:
-				$displaykey=DptInfoCalendarSpecialChars($key);
+				$displaykey=DptinfoCalendarSpecialChars($key);
 				echo "<font color='red'>[<strong>DptInfoDate</strong> - Unknown key $displaykey]</font>";
 			}
 		}
@@ -360,7 +360,7 @@
 				$DptinfoCalendarGlobalSettings[$key]=intval($item);
 				break;
 			default:
-				$displaykey=DptInfoCalendarSpecialChars($key);
+				$displaykey=DptinfoCalendarSpecialChars($key);
 				echo "<font color='red'>[<strong>DptInfoCalSet</strong> - Unknown key $displaykey]</font>";
 			}
 		}
@@ -383,7 +383,7 @@
 				$personData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
 			default:
-				$displaykey=DptInfoCalendarSpecialChars($key);
+				$displaykey=DptinfoCalendarSpecialChars($key);
 				echo "<font color='red'>[<strong>DptinfoPerson</strong> - Unknown key $displaykey]</font>";
 			}
 		}
@@ -550,8 +550,8 @@
 		}
 		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, ";
 		$calCall.= "{"; // options start
-		$calCall.=" iconPath:'".DptInfoCalendarSpecialChars(DptInfoCalendarGetHTTPPath()."pub/dptinfo-calendar/icons/")."'"; $callvirg=",";
-		if (isset($a["startdate"])) { $calCall.="$callvirg startDate:\"".DptInfoCalendarSpecialChars($a["startdate"])."\""; $callvirg=","; }
+		$calCall.=" iconPath:'".DptinfoCalendarSpecialChars(DptInfoCalendarGetHTTPPath()."pub/dptinfo-calendar/icons/")."'"; $callvirg=",";
+		if (isset($a["startdate"])) { $calCall.="$callvirg startDate:\"".DptinfoCalendarSpecialChars($a["startdate"])."\""; $callvirg=","; }
 		$calCall.= "} "; //options end
 		//		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, DptinfoCalendarOptions$DptinfoCalendarDisplayCounter); ";
 		$calCall.= "); ";
