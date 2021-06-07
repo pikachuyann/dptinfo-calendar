@@ -276,9 +276,16 @@
 			case "url":
 				$eventData[$key]=DptinfoCalendarSpecialChars($item);
 				break;
+			case "teachers":
+				$eventData[$key]=intval($item);
+				break;
 			default:
-				$displaykey=DptinfoCalendarSpecialChars($key);
-				echo "<font color='red'>[<strong>DptInfoLectureAdd</strong> - Unknown key $displaykey]</font>";
+				if (preg_match("/teacher[0-9]+/", $key)) {
+					$eventData[$key]=DptinfoCalendarSpecialChars($item);
+				} else {
+					$displaykey=DptinfoCalendarSpecialChars($key);
+					echo "<font color='red'>[<strong>DptInfoLectureAdd</strong> - Unknown key $displaykey]</font>";
+				}
 			}
 		}
 
@@ -480,6 +487,18 @@
 							$script_dical.=" $chgkey: '$chgvalue' ";
 						}
 						$script_dical.=" }, ";
+					}
+					$script_dical.="]";
+				} else if ($cle == "deletions") {
+					if (count($valeur)==0) continue;
+					if ($isFirstKey) { $isFirstKey = false; } else { $script_dical.=", "; }
+					$script_dical.="$cle: ["; $isFV = true;
+					foreach ($valeur as $notused => $chgdata) {
+						$isFV ? ($isFV = false) : ($script_dical.=",");
+						if (!isset($chgdata['which']))
+							$script_dical.="''";
+						else
+							$script_dical.="'$chgdata[which]'";
 					}
 					$script_dical.="]";
 				} else {
