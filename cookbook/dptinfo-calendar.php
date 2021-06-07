@@ -482,8 +482,18 @@
 					foreach ($valeur as $notused => $chgdata) { 
 						$script_dical.=" {"; $isFV = true;
 						foreach ($chgdata as $chgkey => $chgvalue) { 
+							if (preg_match("/teacher[0-9]+/",$chgkey)) continue;
 							if ($chgkey=="id") continue;
 							$isFV ? ($isFV = false) : ($script_dical.=",");
+							if ($chgkey == "teachers") {
+								$nbt = intval($chgvalue);
+								$script_dical.=" teacher: [";
+								for ($i = $stindx; $i < $stindx + $nbt; $i++) {
+									if ($i != $stindx) { $script_dical.=", "; }
+									$script_dical.="'".$chgdata["teacher$i"]."'";
+								}
+								$script_dical.="] "; continue;
+							}
 							$script_dical.=" $chgkey: '$chgvalue' ";
 						}
 						$script_dical.=" }, ";
