@@ -487,6 +487,7 @@
 							$isFV ? ($isFV = false) : ($script_dical.=",");
 							if ($chgkey == "teachers") {
 								$nbt = intval($chgvalue);
+								$stindx = $DptinfoCalendarGlobalSettings["startindex"];
 								$script_dical.=" teacher: [";
 								for ($i = $stindx; $i < $stindx + $nbt; $i++) {
 									if ($i != $stindx) { $script_dical.=", "; }
