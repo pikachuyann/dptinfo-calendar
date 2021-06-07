@@ -145,6 +145,15 @@ function dateBlocked(data, d)
 	return false;
 }
 
+function dateCancelled(lecture, d)
+{
+	if (typeof lecture.deletions == 'undefined') return false;
+	if (typeof lecture.deletions == 'string') return lecture.deletions == d;
+	for (var i in lecture.deletions)
+		if (lecture.deletions[i] == d) return true;
+	return false;
+}
+
 /**************************************************************************************************************************/
 
 function calendarEvent (data, cev)
@@ -206,8 +215,14 @@ function addLectures(data,lecture,events) {
 	if (typeof lecture.additions == 'undefined') return;
 	for (var i in lecture.additions)
 	{
+		var add_start = '';
+		var add_end = '';
+		if (typeof lecture.additions[i].start == 'undefined') add_start = lecture.start
+		else add_start = lecture.additions[i].start;
+		if (typeof lecture.additions[i].end == 'undefined') add_end = lecture.end
+		else add_end = lecture.additions[i].end;
 		var d = lecture.additions[i].date;
-		events[d] = genLectureEvent(data,lecture,d, lecture.additions[i].start, lecture.additions[i].end);
+		events[d] = genLectureEvent(data,lecture,d, add_start, add_end);
 		setLectureProperties(lecture.additions[i],events[d]);
 		applySettings(lecture.additions[i],events[d]);
 	}
@@ -253,6 +268,7 @@ function calendarLecture (data, lecture) {
 		cDate = advanceDate(cDate,7);
 		if (cDate > lastCours) break;
 		if (dateBlocked(data,cDate)) continue;
+		if (dateCancelled(lecture,cDate)) continue;
 		events[cDate] = genLectureEvent(data,lecture,cDate,lecture.start,lecture.end);
 	}
 
