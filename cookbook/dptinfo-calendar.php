@@ -142,6 +142,11 @@
 		return $ns3;
 	}
 
+	function DptinfoCalendarJSEscape($string) {
+		$newstring = preg_replace("/'/", "\\'", $string);
+		return $newstring;
+	}
+
 	function DptinfoCalendarEvent($pagename, $args) {
 		global $DptinfoCalendarEvents;
 
@@ -164,7 +169,7 @@
 			case "color":
 			case "url":
 			case "urltext":
-				$eventData[$key]=DptinfoCalendarSpecialChars($item);
+				$eventData[$key]=DptinfoCalendarJSEscape($item);
 				break;
 			default:
 				$displaykey=DptinfoCalendarSpecialChars($key);
@@ -199,14 +204,14 @@
 			case "url":
 			case "urltext":
 			case "color":
-				$eventData[$key]=DptinfoCalendarSpecialChars($item);
+				$eventData[$key]=DptinfoCalendarJSEscape($item);
 				break;
 			case "teachers":
 				$eventData[$key]=intval($item);
 				break;
 			default:
 				if (preg_match('/teacher[0-9]+/', $key)) {
-					$eventData[$key]=DptinfoCalendarSpecialChars($item);
+					$eventData[$key]=DptinfoCalendarJSEscape($item);
 				} else {
 					$displaykey=DptinfoCalendarSpecialChars($key);
 					echo "<font color='red'>[<strong>DptInfoLecture</strong> - Unknown key $displaykey]</font>";
@@ -242,7 +247,7 @@
 			case "date":
 			case "url":
 			case "urltext":
-				$eventData[$key]=DptinfoCalendarSpecialChars($item);
+				$eventData[$key]=DptinfoCalendarJSEscape($item);
 				break;
 			default:
 				$displaykey=DptinfoCalendarSpecialChars($key);
@@ -274,14 +279,14 @@
 			case "date":
 			case "name":
 			case "url":
-				$eventData[$key]=DptinfoCalendarSpecialChars($item);
+				$eventData[$key]=DptinfoCalendarJSEscape($item);
 				break;
 			case "teachers":
 				$eventData[$key]=intval($item);
 				break;
 			default:
 				if (preg_match("/teacher[0-9]+/", $key)) {
-					$eventData[$key]=DptinfoCalendarSpecialChars($item);
+					$eventData[$key]=DptinfoCalendarJSEscape($item);
 				} else {
 					$displaykey=DptinfoCalendarSpecialChars($key);
 					echo "<font color='red'>[<strong>DptInfoLectureAdd</strong> - Unknown key $displaykey]</font>";
@@ -307,7 +312,7 @@
 				break;
 			case "id":
 			case "which":
-				$eventData[$key]=DptinfoCalendarSpecialChars($item);
+				$eventData[$key]=DptinfoCalendarJSEscape($item);
 				break;
 			default:
 				$displaykey=DptinfoCalendarSpecialChars($key);
@@ -339,7 +344,7 @@
 			case "start":
 			case "end":
 			case "date":
-				$eventData[$key]=DptinfoCalendarSpecialChars($item);
+				$eventData[$key]=DptinfoCalendarJSEscape($item);
 				break;
 			default:
 				$displaykey=DptinfoCalendarSpecialChars($key);
@@ -362,7 +367,7 @@
 				break;
 			case "start":
 			case "end":
-				$DptinfoCalendarGlobalSettings[$key]=DptinfoCalendarSpecialChars($item);
+				$DptinfoCalendarGlobalSettings[$key]=DptinfoCalendarJSEscape($item);
 				break;
 			case "startindex":
 				$DptinfoCalendarGlobalSettings[$key]=intval($item);
@@ -388,7 +393,7 @@
 				break;
 			case "name":
 			case "url":
-				$personData[$key]=DptinfoCalendarSpecialChars($item);
+				$personData[$key]=DptinfoCalendarJSEscape($item);
 				break;
 			default:
 				$displaykey=DptinfoCalendarSpecialChars($key);
@@ -581,8 +586,8 @@
 		}
 		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, ";
 		$calCall.= "{"; // options start
-		$calCall.=" iconPath:'".DptinfoCalendarSpecialChars(DptInfoCalendarGetHTTPPath()."pub/dptinfo-calendar/icons/")."'"; $callvirg=",";
-		if (isset($a["startdate"])) { $calCall.="$callvirg startDate:\"".DptinfoCalendarSpecialChars($a["startdate"])."\""; $callvirg=","; }
+		$calCall.=" iconPath:'".DptinfoCalendarJSEscape(DptInfoCalendarGetHTTPPath()."pub/dptinfo-calendar/icons/")."'"; $callvirg=",";
+		if (isset($a["startdate"])) { $calCall.="$callvirg startDate:\"".DptinfoCalendarJSEscape($a["startdate"])."\""; $callvirg=","; }
 		$calCall.= "} "; //options end
 		//		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, DptinfoCalendarOptions$DptinfoCalendarDisplayCounter); ";
 		$calCall.= "); ";
