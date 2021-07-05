@@ -364,6 +364,9 @@ function calEventRender(event, element, view)
 	if (event.tag_list.length == 0) { return true; }
 	if (dptinfoCalDefaultOptions.usedTags.length == 0) { return true; }
 
+	filteredArray = event.tag_list.filter(value => dptinfoCalDefaultOptions.usedTags.includes(value));
+	if (filteredArray.length > 0) return true;
+
 	return false;
 }
 
