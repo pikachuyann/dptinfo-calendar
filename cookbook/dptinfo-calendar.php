@@ -445,7 +445,7 @@
 
 	function DptinfoCalendarDisplay($pagename, $args) {
 		global $DptinfoCalendarEvents, $DptinfoCalendarDisplayCounter, $DptinfoCalendarLectures, $DptinfoCalendarGlobalSettings;
-		global $DptinfoCalendarDates, $DptinfoCalendarPeople;
+		global $DptinfoCalendarDates, $DptinfoCalendarPeople, $DptinfoCalendarTags;
 		global $DptinfoCalendarUseNew;
 		global $DptinfoCalendarDebugMode;
 		global $HTMLHeaderFmt;
@@ -597,6 +597,11 @@
 		if (isset($a["showschedule"])) {
 			$displayed_html.="<button id='DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter'>Schedule</button>";
 			$displayed_html.="<button id='DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter'>Agenda</button>";
+		}
+		if (count($DptinfoCalendarTags) > 0) {
+			foreach ($DptinfoCalendarTags as $tag => $name) {
+				$displayed_html.="<input type='checkbox' id='DptinfoCalendarTag$tag-$DptinfoCalendarDisplayCounter'><label for='DptinfoCalendarTag$tag-$DptinfoCalendarDisplayCounter' class='DptinfoCalendarTagLabel'>$name</label>";
+			}
 		}
 		$displayed_html.="<div id='DptinfoCalendarInner$DptinfoCalendarDisplayCounter'> </div> ";
 		if (isset($a["showschedule"])) {
