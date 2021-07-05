@@ -65,6 +65,7 @@ function getEventProperty (event, key)
 
 function applySettings(obj, event)
 {
+	if (typeof obj.tag_list != 'undefined') event.tag_list=obj.tag_list;
 	if (typeof obj.tag == 'string') event.tag=obj.tag;
 	if (typeof obj.vue == 'string') event.vue = obj.vue;
 	if (typeof obj.title == 'string') event.title = obj.title;
@@ -361,7 +362,11 @@ function calEventRender(event, element, view)
 {
 	calApplyTooltip(event, element, view);
 
-	return true;
+	if (typeof event.tag_list == "undefined") { return true; }
+	if (event.tag_list.length == 0) { return true; }
+	if (dptinfoCalDefaultOptions.usedTags.length == 0) { return true; }
+
+	return false;
 }
 
 /**************************************************************************************************************************/

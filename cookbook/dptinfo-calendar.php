@@ -179,7 +179,24 @@
 			case "urltext":
 				$eventData[$key]=DptinfoCalendarJSEscape($item);
 				break;
+			case "tag":
+				$eventData["tag"]=$item;
+				$eventData["tag_list"]=array($item);
+				break;
+			case "tags":
+				if (intval($item) != 0) {
+					$eventData[$key]=intval($item);
+				} else {
+					$splitted_tags=preg_split('/ /',$item);
+					$eventData["tag_list"]=$splitted_tags;
+				}
+				break;
 			default:
+				if (preg_match('/tag[0-9+]/', $key)) {
+					if (!isset($eventData["tag_list"])) { $eventData["tag_list"]=array(); }
+					$eventData["tag_list"][] = $item;
+					break;
+			}
 				$displaykey=DptinfoCalendarSpecialChars($key);
 				echo "<font color='red'>[<strong>DptInfoEvent</strong> - Unknown key $displaykey]</font>";
 			}
@@ -497,7 +514,18 @@
 			$script_dical.="{";
 			foreach ($event as $cle => $valeur) {
 				if ($cle == "urltext") continue;
+				if ($cle == "tags" || $cle == "tag") continue;
 				if ($isFirstKey) { $isFirstKey = false; } else { $script_dical.=", "; }
+				if ($cle == "tag_list") {
+					$isFirstTag = true;
+					$script_dical.="$cle: [";
+					for ($j=0;$j < count($valeur);$j++) {
+						if ($isFirstTag) { $isFirstTag = false; } else { $script_dical.=", "; }
+						$script_dical.="'".$valeur[$j]."'";
+					}
+					$script_dical.="]";
+					continue;
+				}
 				if ($cle == "url" && isset($event["urltext"])) {
 					$script_dical.="$cle: {'$event[urltext]': '$valeur'}";
 					continue;
@@ -644,6 +672,11 @@
 		foreach ($DptinfoCalendarTags as $id => $name) {
 			$furtherJS.="\tif ($('#DptinfoCalendarTag$id-$DptinfoCalendarDisplayCounter').is(':checked')) { tags.push('$id'); }\n";
 			$calCall.="$('#DptinfoCalendarTag$id-$DptinfoCalendarDisplayCounter').click( dptinfoCalendarTagUpdate$DptinfoCalendarDisplayCounter );";
+		}
+		$furtherJS.="\tdptinfoCalDefaultOptions.usedTags = tags;\n";
+		$furtherJS.="\t$('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').fullCalendar('rerenderEvents');\n";
+		if (isset($a["showschedule"])) {
+			$furtherJS.="\t('#DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter').fullCalendar('rerenderEvents');\n";
 		}
 		$furtherJS.="\tconsole.log(tags)\n";
 		$furtherJS.="} \n";
