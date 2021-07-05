@@ -638,6 +638,16 @@
 			$calCall.="$('#DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter'); } ); \n";
 			$calCall.="$('#DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarInner$DptinfoCalendarDisplayCounter'); } ); \n";
 		}
+
+		$furtherJS.="\nfunction dptinfoCalendarTagUpdate$DptinfoCalendarDisplayCounter() {\n";
+		$furtherJS.="\tvar tags = [];\n";
+		foreach ($DptinfoCalendarTags as $id => $name) {
+			$furtherJS.="\tif ($('#DptinfoCalendarTag$id-$DptinfoCalendarDisplayCounter').is(':checked')) { tags.push('$id'); }\n";
+			$calCall.="$('#DptinfoCalendarTag$id-$DptinfoCalendarDisplayCounter').click( dptinfoCalendarTagUpdate$DptinfoCalendarDisplayCounter );";
+		}
+		$furtherJS.="\tconsole.log(tags)\n";
+		$furtherJS.="} \n";
+
 		$calCall.= "} ";
 
 		if (! $DptinfoCalendarUseNew) {

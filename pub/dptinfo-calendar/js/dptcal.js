@@ -33,7 +33,9 @@ var dptinfoCalDefaultOptions = {
 	eventTextColor : 'black',
 	allDaySlot : false,
 	slotLabelFormat : 'HH:mm',
-	timeFormat : 'HH:mm'
+	timeFormat : 'HH:mm',
+	usedTags : [],
+	previousView : 'agenda' // by default, it will be agenda.
 };
 
 var dows = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi'];
@@ -366,6 +368,12 @@ function calEventRender(event, element, view)
 
 function genCalendar(style,name,callback,addoptions)
 {
+	if (style == 'previous')
+	{
+		style = dptinfoCalDefaultOptions.previousView;
+	}
+	dptinfoCalDefaultOptions.previousView = style;
+
 	calEvents = [];
 	if (addoptions.hasOwnProperty('iconPath'))
 		dptinfoCalDefaultOptions.iconPath = addoptions.iconPath;
