@@ -339,8 +339,6 @@ function calendarDate() {
 /**************************************************************************************************************************/
 function addWebPage(data, event, key) {
 	jQuery.each(getEventProperty(event,key).split("\n"),function() {
-		console.log(this);
-		console.log(data.people[this]);
 		if (data.people[this])
 			event.tips.push( { icon: 'person', url: data.people[this], text: this + " webpage" } );
 	});

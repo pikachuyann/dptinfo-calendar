@@ -643,7 +643,6 @@
 		$furtherJS="";
 		if (isset($a["showschedule"])) {
 			$furtherJS.="function dptinfoCalendarDisp$DptinfoCalendarDisplayCounter(tabname) {\n";
-			$furtherJS.="  console.log(tabname); \n";
 			$furtherJS.="  $('#'+tabname).css('display','block'); \n";
 			$furtherJS.="  $('#'+tabname).fullCalendar('render'); \n";
 			$furtherJS.="  $('#'+tabname).fullCalendar('rerenderEvents'); \n";
@@ -678,7 +677,6 @@
 		if (isset($a["showschedule"])) {
 			$furtherJS.="\t('#DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter').fullCalendar('rerenderEvents');\n";
 		}
-		$furtherJS.="\tconsole.log(tags)\n";
 		$furtherJS.="} \n";
 
 		$calCall.= "} ";
