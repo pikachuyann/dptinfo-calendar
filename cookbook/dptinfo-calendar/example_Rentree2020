@@ -1,0 +1,36 @@
+(:dptcaltag id="A1" name="Année 1":)
+(:dptcaltag id="A2" name="Année 2":)
+(:dptcaltag id="A3-4" name="Année 3 et 4":)
+
+(:dptevent date="2020-09-07" start="10:00" end="11:00" color="lightblue" tag="A3-4" name="Rentrée administrative M2 FESup" room="Grand Amphi":)
+(:dptevent date="2020-09-07" start="14:00" end="15:00" color="lightblue" tag="A3-4" name="Rentrée administrative M2 Recherche" room="Grand Amphi":)
+(:dptevent date="2020-09-07" start="16:00" end="17:00" color="lightblue" tag="A3-4" name="Rentrée administrative ARPE et Interface" room="Grand Amphi":)
+(:dptevent date="2020-09-08" start="09:00" end="10:30" color="lightblue" tag="A2" name="Rentrée administrative 2ème année (A-L)" room="Grand Amphi":)
+(:dptevent date="2020-09-08" start="11:00" end="12:00" color="lightblue" tag="A2" name="Rentrée administrative 2ème année (M-Z)" room="Grand Amphi":)
+
+{(dptevent date="2020-09-08" start="14:00" end="16:00" color="lightblue" tag="A1" name="Signature PV Primo-Entrants (M-Z)" room="Atrium")}
+{(dptevent date="2020-09-08" start="14:00" end="15:30" color="lightblue" tag="A1" name="Rentrée administrative Primo-Entrants (A-L)" room="Grand Amphi")}
+{(dptevent date="2020-09-08" start="16:00" end="18:00" color="lightblue" name="Signature PV Primo-Entrants (A-L)" room="Atrium")}
+{(dptevent date="2020-09-08" start="16:00" end="17:30" color="lightblue" name="Rentrée administrative Primo-Entrants (M-Z)" room="Grand Amphi")}
+{(dptevent date="2020-09-09" start="13:00" end="14:00" color="lightblue" name="Présentation des laboratoires" room="Grand Amphi")}
+{(dptevent date="2020-09-09" start="14:45" end="16:30" color="lightblue" name="Forum des laboratoires" room="Atrium")}
+{(dptevent date="2020-09-09" start="16:30" end="17:30" color="lightblue" name="Scène de recherche" room="Grand Amphi")}
+
+%comment% Pour les tags, les deux sont possibles entre tags="3" tag1="A1" tag2="A2" tag3="A3-4" et tags="A1 A2 A3-4" %%
+{(dptevent date="2020-09-08" start="15:00" end="18:15" color="lightpink" tags="A1 A2 A3-4" name="Conférence: Some Mathematical Methods in Machine Learning" room="Visioconférence" speaker="Jean Gallier")}
+{(dptevent date="2020-09-09" start="08:30" end="11:45" color="lightpink" tags="A1 A2 A3-4" name="Conférence: Computational Thinking in Singapore Education" room="Visioconférence" speaker="Weng Kin Ho")}
+{(dptevent date="2020-09-10" start="09:00" end="12:15" color="lightpink" name="Conférence: Functional Fundations for Operating Systems" room="Visioconférence" speaker="Anil Madhavapeddy")}
+(:dptevent date="2020-09-11" start="09:00" end="12:15" color="lightpink" name="Conférence: The Free Energy Principle" room="Visio-conférence" speaker="Rosalyn Moran":)
+
+(:dptevent date="2020-09-09" start="14:00" end="15:30" color="violet" name="Réunion M1" room="Salle 1B10 Sud-Ouest (55 places)" speaker="D. Baelde":)
+(:dptevent date="2020-09-10" start="12:15" end="14:00" color="lightblue" name="Rentrée étudiants internationaux" room="Grand Amphi":)
+(:dptevent date="2020-09-10" start="14:00" end="16:00" color="violet" name="Réunion M2" room="Salle 1E26 Sud-Ouest (55 places)" speaker="M. Sighireanu":)
+(:dptevent date="2020-09-10" start="13:00" end="18:00" color="violet" name="Journées Portes Ouvertes" room="Salle 1Z25 Nord (60 places)":)
+(:dptevent date="2020-09-11" start="16:00" end="18:00" color="violet" name="Réunion d'informations départements Math/Info" room="Grand Amphi" speakers="2" speaker1="M. Sighireanu" speaker2="S. Schwoon":)
+
+(:dptevent date="2020-09-14" start="08:45" end="09:30" color="lightblue" name="Choix de département" room="Amphi 150":)
+(:dptevent date="2020-09-14" start="18:30" end="20:00" color="lightblue" name="Présentation générale du diplôme" room="Visio-conférence":)
+(:dptevent date="2020-09-14" start="14:00" end="15:00" color="violet" name="Réunion L3 Info-Maths" room="Salle 1Z25 Nord (60 places)" speaker="S. Schwoon":)
+(:dptevent date="2020-09-14" start="15:00" end="16:00" color="violet" name="Réunion L3 Info" room="Salle 1Z25 Nord (60 places)" speaker="S. Schwoon":)
+
+(:dptcal startDate="2020-09-07":)
