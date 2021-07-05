@@ -19,6 +19,7 @@
 	}
 	$DptinfoCalendarPeople = array();
 	$DptinfoCalendarDates = array();
+	$DptinfoCalendarTags = array();
 	$DptinfoCalendarDisplayCounter = 0;
 
 	// Default settings
@@ -96,6 +97,9 @@
 	Markup('DptinfoCalendarPerson', 'directives', '/\\(:dptperson (.*):\\)/', "DptinfoCalendarPersonHook");
 	Markup('DptinfoCalendarPersonNA', 'directives', '/\\(:dptperson:\\)/', "DptinfoCalendarPersonHook");
 	SDVA($MarkupExpr, array('dptperson' => 'DptinfoCalendarPerson($pagename,$argp)'));
+	Markup('DptinfoCalendarTag', 'directives', '/\\(:dptcaltag (.*):\\)/', "DptinfoCalendarTagHook");
+	Markup('DptinfoCalendarTagNA', 'directives', '/\\(:dptcaltag:\\)/', "DptinfoCalendarTagHook");
+	SDVA($MarkupExpr, array('dptcaltag' => 'DptinfoCalendarTag($pagename,$argp)'));
 
 	// Sort of a "hook" to make another PmWiki function actually parse the arguments
 	function DptinfoCalendarDisplayHook($arguments) {
@@ -133,6 +137,10 @@
 	function DptinfoCalendarPersonHook($arguments) {
 		global $pagename;
 		return DptinfoCalendarPerson($pagename, ParseArgs(PSS($arguments[1])));
+	}
+	function DptinfoCalendarTagHook($arguments) {
+		global $pagename;
+		return DptinfoCalendarTag($pagename, ParseArgs(PSS($arguments[1])));
 	}
 
 	function DptinfoCalendarSpecialChars($string) {
@@ -404,6 +412,35 @@
 		if (!isset($personData["name"])) { echo "<font color='red'>[<strong>DptinfoPerson</strong> - Unspecified name"; }
 		elseif (isset($DptinfoCalendarPeople[$personData["name"]])) { echo "<font color='red'>[<strong>DptinfoPersonn</strong> - Had already stored info for $personData[name]</font>"; }
 		$DptinfoCalendarPeople[$personData["name"]] = $personData;
+	}
+
+	function DptinfoCalendarTag($pagename, $args) {
+		global $DptinfoCalendarTags;
+
+		$a = $args;
+		$a = array_change_key_case($a,CASE_LOWER);
+
+		$tag_id = "";
+		$tag_name = "";
+
+		foreach ($a as $key => $item) {
+			switch ($key) {
+			case "#":
+				break;
+			case "id":
+				$tag_id=DptinfoCalendarJSEscape($item);
+				break;
+			case "name":
+				$tag_name=DptinfoCalendarSpecialChars($item);
+				break;
+			default:
+				$displaykey=DptinfoCalendarSpecialChars($key);
+				echo "<font color='red'>[<strong>DptinfoCalTag</strong> - Unknown key $displaykey]</font>";
+			}
+		}
+
+		if ($tag_id == "" || $tag_name == "") { echo "<font color='red'>[<strong>DptinfoCalTag</strong> - Incomplete definition of a tag.]</font>"; }
+		$DptinfoCalendarTags[$tag_id] = $tag_name;
 	}
 
 	function DptinfoCalendarDisplay($pagename, $args) {
