@@ -77,7 +77,7 @@ function applySettings(obj, event)
 	if (typeof obj.properties == 'object')
 		jQuery.extend(event,obj.properties);
 
-	var linktext = "Plus d'information";
+	var linktext = "Plus d'informations";
 	if (typeof obj.info == 'string') event.tips.push(
 		{ icon: 'info', text: obj.info });
 	if (typeof obj.url == 'string') event.tips.push(
@@ -87,8 +87,30 @@ function applySettings(obj, event)
 			event.tips.push({icon:'link', text:k, url:obj.url[k]});
 }
 
+function getHourMinuteString (datestring)
+{
+	var datedate = new Date(datestring);
+	var minutes = datedate.getMinutes();
+	var hours = datedate.getHours();
+	if (minutes < 10) { minutes="0"+minutes; }
+	if (hours < 10) { hours="0"+hours; }
+	return hours+":"+minutes
+}
+
 function finalizeEvent (event)
 {
+	event.tips.push({icon: 'info', text: getHourMinuteString(event.start)+" - "+getHourMinuteString(event.end)});
+	if (typeof event.ev_name != 'undefined')
+		event.tips.push({icon: 'info', text: event.ev_name });
+	if (typeof event.ev_room != 'undefined')
+		event.tips.push({icon: 'info', text: 'Room/Salle: '+event.ev_room});
+	var tmp_speaker = getEventProperty(event, 'speaker');
+	if (tmp_speaker != "")
+		event.tips.push({icon: 'info', text: 'Speaker(s)/Conf&eacute;rencier(s): '+tmp_speaker});
+	var tmp_teacher = getEventProperty(event, 'teacher');
+	if (tmp_teacher != "")
+		event.tips.push({icon: 'info', text: 'Teacher(s)/Enseignant(s): '+tmp_teacher});
+
 	event.tip = makeTips(event.tips);
 	calEvents.push(event);
 }
