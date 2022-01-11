@@ -125,7 +125,7 @@ function makeTips (list)
 			text += "<img src='"+dptinfoCalDefaultOptions.iconPath+this.icon+".png' />";
 		text+"</td><td>";
 		if (typeof this.url == 'string')
-			text += "<a href="+this.url+"'>"+this.text+"</a>";
+			text += "<a href='"+this.url+"'>"+this.text+"</a>";
 		else
 			text += this.text;
 		text+="</td></tr>";
@@ -259,6 +259,7 @@ function applyModifications(events, modif) {
 	var orig_start = event.start;
 	var orig_end = event.end;
 	var orig_room = event.ev_room;
+	var orig_name = event.ev_name;
 
 	setEventProperty(modif, event, "date", modif.which);
 	setEventProperty(modif, event, "start", event.start.substr(11));
@@ -268,7 +269,7 @@ function applyModifications(events, modif) {
 
 	setLectureProperties(modif, event);
 
-	setEventProperty(modif, event, "important", event.end != orig_end || event.start != orig_start || event.ev_room != orig_room);
+	setEventProperty(modif, event, "important", event.end != orig_end || event.start != orig_start || event.ev_room != orig_room || event.ev_name != orig_name);
 	if (event.ev_important) event.borderColor = 'red';
 	
 	applySettings(modif, event);
