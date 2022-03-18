@@ -397,6 +397,9 @@ function calEventRender(event, element, view)
 
 function genCalendar(style,name,callback,addoptions)
 {
+	var url = window.location.href;
+	var dMatch = /date=(\d\d\d\d-\d\d-\d\d)/.exec(url);
+
 	if (style == 'previous')
 	{
 		style = dptinfoCalDefaultOptions.previousView;
@@ -449,4 +452,8 @@ function genCalendar(style,name,callback,addoptions)
 
 	if (style == 'schedule')
 		$("#"+name).fullCalendar('gotoDate', data.start);
+
+	if (dMatch != null && style == 'agenda') {
+		$('#'+name).fullCalendar('gotoDate',dMatch[1]);
+	}
 }

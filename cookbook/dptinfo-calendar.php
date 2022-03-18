@@ -649,21 +649,21 @@
 			$furtherJS.="};";
 		}
 
-		$calCall = "function(){ "; //DptinfoCalendarOptions$DptinfoCalendarDisplayCounter = ";
+		$calCall = "\tfunction(){ \n"; //DptinfoCalendarOptions$DptinfoCalendarDisplayCounter = ";
 		if (isset($a["showschedule"])) {
-			$calCall.="$('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none');";
+			$calCall.="\t\t$('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none');\n";
 		}
-		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, ";
+		$calCall.= "\t\tgenCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, ";
 		$calCall.= "{"; // options start
 		$calCall.=" iconPath:'".DptinfoCalendarJSEscape(DptInfoCalendarGetHTTPPath()."pub/dptinfo-calendar/icons/")."'"; $callvirg=",";
 		if (isset($a["startdate"])) { $calCall.="$callvirg startDate:\"".DptinfoCalendarJSEscape($a["startdate"])."\""; $callvirg=","; }
 		$calCall.= "} "; //options end
 		//		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, DptinfoCalendarOptions$DptinfoCalendarDisplayCounter); ";
-		$calCall.= "); ";
+		$calCall.= "); \n";
 		if (isset($a["showschedule"])) {
-			$calCall.=" genCalendar('schedule', 'DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, {}); ";
-			$calCall.="$('#DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter'); } ); \n";
-			$calCall.="$('#DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarInner$DptinfoCalendarDisplayCounter'); } ); \n";
+			$calCall.="\t\tgenCalendar('schedule', 'DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, {}); \n";
+			$calCall.="\t\t$('#DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter'); } ); \n";
+			$calCall.="\t\t$('#DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarInner$DptinfoCalendarDisplayCounter'); } ); \n";
 		}
 
 		$furtherJS.="\nfunction dptinfoCalendarTagUpdate$DptinfoCalendarDisplayCounter() {\n";
@@ -679,12 +679,15 @@
 		}
 		$furtherJS.="} \n";
 
-		$calCall.= "} ";
+		$calCall.="\t\tvar url = window.location.href;";
+		$calCall.=" var dMatch = /date=(\d\d\d\d-\d\d-\d\d)/.exec(url); ";
+		$calCall.=" if (dMatch != null) { $('#DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter').click(); }";
+		$calCall.= "\t}\n";
 
 		if (! $DptinfoCalendarUseNew) {
-			$hdrscript="<script> $furtherJS $(document).ready( $calCall ); </script>";
+			$hdrscript="<script>$furtherJS\n$(document).ready(\n$calCall); \n </script>";
 		} else {
-			$hdrscript="<script> $furtherJS DptinfoCalendarReady( $calCall ); </script>";
+			$hdrscript="<script>$furtherJS\nDptinfoCalendarReady(\n$calCall); \n </script>";
 		}
 		$HTMLHeaderFmt["DptinfoCalendarDISP$DptinfoCalendarDisplayCounter"]=$hdrscript;
 		$HTMLHeaderFmt["DptinfoCalendarDATA$DptinfoCalendarDisplayCounter"]=$script_dical;
