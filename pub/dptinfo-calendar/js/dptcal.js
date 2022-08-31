@@ -447,6 +447,20 @@ function genCalendar(style,name,callback,addoptions)
 	// Actually display the calendar:
 	$("#"+name).fullCalendar(options);
 
+	rightnow = new Date();
+	currentdate = rightnow.toISOString().split('T')[0];
+
+	console.log(data);
+	console.log(addoptions);
+	console.log(currentdate);
+	if (addoptions.hasOwnProperty('showFrom') && addoptions.hasOwnProperty('showUntil')) {
+		console.log("hello!");
+		if (currentdate < addoptions.showFrom)
+			$("#"+name).fullCalendar('gotoDate', addoptions.showFrom);
+		else if (currentdate > addoptions.showUntil)
+			$("#"+name).fullCalendar('gotoDate', addoptions.showUntil);
+	}
+
 	if (addoptions.hasOwnProperty('startDate'))
 		$("#"+name).fullCalendar('gotoDate', addoptions.startDate);
 

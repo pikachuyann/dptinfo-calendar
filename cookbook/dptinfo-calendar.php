@@ -657,6 +657,8 @@
 		$calCall.= "{"; // options start
 		$calCall.=" iconPath:'".DptinfoCalendarJSEscape(DptInfoCalendarGetHTTPPath()."pub/dptinfo-calendar/icons/")."'"; $callvirg=",";
 		if (isset($a["startdate"])) { $calCall.="$callvirg startDate:\"".DptinfoCalendarJSEscape($a["startdate"])."\""; $callvirg=","; }
+		if (isset($a["showfrom"])) { $calCall.="$callvirg showFrom:\"".DptinfoCalendarJSEscape($a["showfrom"])."\""; $callvirg=","; }
+		if (isset($a["showuntil"])) { $calCall.="$callvirg showUntil:\"".DptinfoCalendarJSEscape($a["showuntil"])."\""; $callvirg=","; }
 		$calCall.= "} "; //options end
 		//		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, DptinfoCalendarOptions$DptinfoCalendarDisplayCounter); ";
 		$calCall.= "); \n";
