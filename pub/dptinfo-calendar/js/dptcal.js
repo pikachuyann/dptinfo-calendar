@@ -306,6 +306,12 @@ function calendarLecture (data, lecture) {
 }
 
 function calendarLectureSummary (data, lecture) {
+	if (data.hasOwnProperty('currentperiod')) {
+		if (lecture.hasOwnProperty('period')) {
+			if (lecture.period != data.currentperiod) { return; }
+		}
+	}
+
 	var cDate=advanceDate( data.start, new Date(lecture.first).getDay() - new Date(data.start).getDay() );
 
 	var event = newEvent(getLectureDuration(cDate, lecture.start, lecture.end));
@@ -429,6 +435,9 @@ function genCalendar(style,name,callback,addoptions)
 	}
 	
 	data = callback();
+	if (addoptions.hasOwnProperty('period')) {
+		data.currentperiod = addoptions.period;
+	}
 	if (! data.hasOwnProperty('people')) data.people={};
 
 	if (style == 'agenda')
@@ -450,9 +459,6 @@ function genCalendar(style,name,callback,addoptions)
 	rightnow = new Date();
 	currentdate = rightnow.toISOString().split('T')[0];
 
-	console.log(data);
-	console.log(addoptions);
-	console.log(currentdate);
 	if (addoptions.hasOwnProperty('showFrom') && addoptions.hasOwnProperty('showUntil')) {
 		console.log("hello!");
 		if (currentdate < addoptions.showFrom)

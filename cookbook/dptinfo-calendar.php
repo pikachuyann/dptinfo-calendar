@@ -7,7 +7,7 @@
 	 * GOAL : Be able to use wiki markups to fill and display a calendar through a modified version of FullCalendar that is used in the Computer Science department of ENS Paris-Saclay, France
 	 ***/
 
-	$RecipeInfo['DptinfoCalendar']['version'] = '0.1.0';
+	$RecipeInfo['DptinfoCalendar']['version'] = '0.2.0';
 
 	/** To easily distinguish with other recipes, the global variables contain the (wikified?) name of the recipe, which is long; maybe this is not a good idea. **/
 
@@ -228,6 +228,7 @@
 			case "id":
 			case "url":
 			case "urltext":
+			case "period":
 			case "color":
 				$eventData[$key]=DptinfoCalendarJSEscape($item);
 				break;
@@ -395,6 +396,7 @@
 				$DptinfoCalendarGlobalSettings[$key]=DptinfoCalendarJSEscape($item);
 				break;
 			case "startindex":
+			case "periods":
 				$DptinfoCalendarGlobalSettings[$key]=intval($item);
 				break;
 			default:
@@ -621,9 +623,17 @@
 		$script_dical.="};\n"; // Ends the function
 		$script_dical.="</script>";
 
+		$periods = isset($DptinfoCalendarGlobalSettings["periods"]) ? intval($DptinfoCalendarGlobalSettings["periods"]) : 0;
+
 		$displayed_html="<div id='DptinfoCalendar$DptinfoCalendarDisplayCounter'>";
 		if (isset($a["showschedule"])) {
-			$displayed_html.="<button id='DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter'>Schedule</button>";
+			if ($periods > 0) {
+				for ($i = 1;$i <= $periods;$i++) {
+					$displayed_html.="<button id='DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter-$i'>Schedule (Period $i)</button>";
+				}
+			} else {
+				$displayed_html.="<button id='DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter'>Schedule</button>";
+			}
 			$displayed_html.="<button id='DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter'>Agenda</button>";
 		}
 		if (count($DptinfoCalendarTags) > 0) {
@@ -633,7 +643,13 @@
 		}
 		$displayed_html.="<div id='DptinfoCalendarInner$DptinfoCalendarDisplayCounter'> </div> ";
 		if (isset($a["showschedule"])) {
-			$displayed_html.="<div id='DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter'> </div>";
+			if ($periods == 0) {
+				$displayed_html.="<div id='DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter'> </div>";
+			} else {
+				for ($i = 1;$i <= $periods;$i++) {
+					$displayed_html.="<div id='DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter-$i'> </div>";
+				}
+			}
 		}
 		$displayed_html.="</div>";
 
@@ -649,9 +665,19 @@
 			$furtherJS.="};";
 		}
 
+		$alldisplaynone="$('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none');";
+		if ($periods == 0) {
+			$alldisplaynone.=" $('#DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter').css('display','none');";
+		} else {
+			for ($i = 1;$i <= $periods;$i++) {
+				$alldisplaynone.=" $('#DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter-$i').css('display', 'none');";
+			}
+		}
+
 		$calCall = "\tfunction(){ \n"; //DptinfoCalendarOptions$DptinfoCalendarDisplayCounter = ";
 		if (isset($a["showschedule"])) {
-			$calCall.="\t\t$('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none');\n";
+			//$calCall.="\t\t$('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none');\n";
+			$calCall.="\t\t$alldisplaynone\n";
 		}
 		$calCall.= "\t\tgenCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, ";
 		$calCall.= "{"; // options start
@@ -662,10 +688,18 @@
 		$calCall.= "} "; //options end
 		//		$calCall.= "genCalendar('agenda', 'DptinfoCalendarInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, DptinfoCalendarOptions$DptinfoCalendarDisplayCounter); ";
 		$calCall.= "); \n";
+
 		if (isset($a["showschedule"])) {
-			$calCall.="\t\tgenCalendar('schedule', 'DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, {}); \n";
-			$calCall.="\t\t$('#DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter'); } ); \n";
-			$calCall.="\t\t$('#DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarInner$DptinfoCalendarDisplayCounter'); } ); \n";
+			if ($periods == 0) {
+				$calCall.="\t\tgenCalendar('schedule', 'DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter', dptinfoCalendar$DptinfoCalendarDisplayCounter, {}); \n";
+				$calCall.="\t\t$('#DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter').click( function() { $('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').css('display','none'); dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter'); } ); \n";
+			} else {
+				for ($i = 1;$i <= $periods;$i++) {
+					$calCall.="\t\tgenCalendar('schedule', 'DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter-$i', dptinfoCalendar$DptinfoCalendarDisplayCounter, {'period': $i}); \n";
+					$calCall.="\t\t$('#DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter-$i').click( function() { $alldisplaynone dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter-$i'); } );";
+				}
+			}
+			$calCall.="\t\t$('#DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter').click( function() { $alldisplaynone dptinfoCalendarDisp$DptinfoCalendarDisplayCounter('DptinfoCalendarInner$DptinfoCalendarDisplayCounter'); } ); \n";
 		}
 
 		$furtherJS.="\nfunction dptinfoCalendarTagUpdate$DptinfoCalendarDisplayCounter() {\n";
@@ -677,9 +711,25 @@
 		$furtherJS.="\tdptinfoCalDefaultOptions.usedTags = tags;\n";
 		$furtherJS.="\t$('#DptinfoCalendarInner$DptinfoCalendarDisplayCounter').fullCalendar('rerenderEvents');\n";
 		if (isset($a["showschedule"])) {
-			$furtherJS.="\t('#DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter').fullCalendar('rerenderEvents');\n";
+			if ($periods == 0) {
+				$furtherJS.="\t('#DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter').fullCalendar('rerenderEvents');\n";
+			} else {
+				for ($i = 1;$i <= $periods;$i++) {
+					$calCall.="\t\t$('DptinfoCalendarScheduleInner$DptinfoCalendarDisplayCounter-$i').fullCalendar('rerenderEvents');\n";
+				}
+			}
 		}
 		$furtherJS.="} \n";
+
+		if (isset($a["showschedule"])) {
+			if ($periods > 0) {
+				$calCall.="\t\t$('#DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter-1').click();";
+			} else {
+				$calCall.="\t\t$('#DptinfoCalendarScheduleButton$DptinfoCalendarDisplayCounter').click();";
+			}
+		} else {
+			$calCall.="\t\t$('#DptinfoCalendarAgendaButton$DptinfoCalendarDisplayCounter').click();";
+		}
 
 		$calCall.="\t\tvar url = window.location.href;";
 		$calCall.=" var dMatch = /date=(\d\d\d\d-\d\d-\d\d)/.exec(url); ";
