@@ -271,6 +271,7 @@
 			case "which":
 			case "name":
 			case "date":
+			case "color":
 			case "url":
 			case "urltext":
 				$eventData[$key]=DptinfoCalendarJSEscape($item);
